@@ -22,15 +22,16 @@ def handle_verification():
 def handle_messages():
   print "Handling Messages"
   payload = request.get_data()
-  print payload
   for sender, message in messaging_events(payload):
     print "Incoming from %s: %s" % (sender, message)
-    send_message(PAT, sender, message)
+    send_message(PAT, sender, "You said " + message +, "but I don\'t care!")
+    send_message(PAT, sender, "Have a nice day! :)")
   return "ok"
 
 def messaging_events(payload):
-  """Generate tuples of (sender_id, message_text) from the
-  provided payload.
+  """
+    Generate tuples of (sender_id, message_text) from the
+    provided payload.
   """
   data = json.loads(payload)
   messaging_events = data["entry"][0]["messaging"]
@@ -42,7 +43,8 @@ def messaging_events(payload):
 
 
 def send_message(token, recipient, text):
-  """Send the message text to recipient with id recipient.
+  """
+    Send the message text to recipient with id recipient.
   """
 
   r = requests.post("https://graph.facebook.com/v2.6/me/messages",
