@@ -72,5 +72,5 @@ def parse_message(text):
         return "Rude!"
     elif "?" in message:
         return "Is that a question? Because I don't get it."
-    elif:
+    else:
         return "That doesn't look like anything to me."
