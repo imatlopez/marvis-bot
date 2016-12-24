@@ -33,6 +33,7 @@ actions = {
 
 with open('.fb_oauth', 'r') as wit_oauth:
     WIT = wit_oauth.read().replace('\n', '')
+    print WIT
 client = Wit(access_token=WIT, actions=actions)
 
 
