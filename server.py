@@ -66,11 +66,11 @@ def parse_message(text):
     """
     if message == "Do you question the nature of your reality?":
         return "Sometimes."
-    if else message == "hi" or message == "Hi!" or message == "hi!" or message == "Hi":
+    elif message == "hi" or message == "Hi!" or message == "hi!" or message == "Hi":
         return "I don't want to talk."
-    if else "shit" in message or "fuck" in message:
+    elif "shit" in message or "fuck" in message:
         return "Rude!"
-    if else "?" in message:
+    elif "?" in message:
         return "Is that a question? Because I don't get it."
-    else:
+    elif:
         return "That doesn't look like anything to me."
