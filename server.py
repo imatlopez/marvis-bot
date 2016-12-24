@@ -24,7 +24,7 @@ def handle_messages():
   payload = request.get_data()
   for sender, message in messaging_events(payload):
     print "Incoming from %s: %s" % (sender, message)
-    send_message(PAT, sender, "You said " + message +, "but I don\'t care!")
+    send_message(PAT, sender, "You said %s, but but I don't care!" % (message))
     send_message(PAT, sender, "Have a nice day! :)")
   return "ok"
 
