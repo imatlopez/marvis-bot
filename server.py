@@ -33,6 +33,7 @@ def handle_messages():
     payload = request.get_data()
     for sender, message in messaging_events(payload):
         print("Incoming from %s: %s" % (sender, message))
+        print("Server: " + message)
         send_message(PAT, sender, parse.message(message))
     return "ok"
 

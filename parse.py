@@ -38,5 +38,5 @@ client = Wit(access_token=WIT, actions=actions)
 
 def message(text):
     text = str.lower(text)
-    print text
+    print("Parse: " + text)
     return client.message(text)
