@@ -2,3 +2,4 @@ flask
 gunicorn
 pywit
 requests
+Pip
