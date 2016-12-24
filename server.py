@@ -60,7 +60,7 @@ def send_message(token, recipient, text):
 if __name__ == '__main__':
   app.run()
 
-def parse_message(text):
+def parse_message(message):
     """
         Easier to parse.
     """
