@@ -1,40 +1,36 @@
-# facebook-chatbot-python
-A simple python chatbot for Facebook Messenger.
+# Messenger Platform Sample -- node.js
 
-The bot reads incoming Facebook Messenger messages, and responds by generating random text from a corpus. The length of the response is randomly selected around the length of the incoming message, and a random word from the incoming message is selected as the starting word of the response.
+This project is an example server for Messenger Platform built in Node.js. With this app, you can send it messages and it will echo them back to you. You can also see examples of the different types of Structured Messages. 
 
-## Installing dependencies
+It contains the following functionality:
 
-Use of virtualenv is highly recommended, especially since the old version of `nltk` used requires an old version of `setuptools`.
+* Webhook (specifically for Messenger Platform events)
+* Send API 
+* Web Plugins
+* Messenger Platform v1.1 features
 
-    $ pip install -r requirements.txt
+Follow the [walk-through](https://developers.facebook.com/docs/messenger-platform/quickstart) to learn about this project in more detail.
 
-## Setting up a Facebook app for Facebook messenger
+## Setup
 
-* You're going to need a publicly routed https address. I used [ngrok](https://ngrok.com/) to create a tunnel to my local development machine.
-* The server will need to be started for you to verify the webhook. See "Starting the server" below.
-* Follow the instructions provided in the [Facebook quickstart tutorial](https://developers.facebook.com/docs/messenger-platform/quickstart) for creating a page and an app.
-* Set the `VERIFY_TOKEN` and `FACEBOOK_TOKEN` environment variables to the values you get from following the tutorial.
+Set the values in `config/default.json` before running the sample. Descriptions of each parameter can be found in `app.js`. Alternatively, you can set the corresponding environment variables as defined in `app.js`.
 
-## Building a corpus
+Replace values for `APP_ID` and `PAGE_ID` in `public/index.html`.
 
-Before you start the server, there has to be a file called `corpus.txt` in the root directory. This can be any text, but I found it interesting to use all of my sent emails as the corpus.
+## Run
 
-If you have your emails in mbox format (you can get them from Gmail using [Google Takeout](https://takeout.google.com/settings/takeout)), you can use the provided `mail_corpus.py` to build a corpus.
+You can start the server by running `npm start`. However, the webhook must be at a public URL that the Facebook servers can reach. Therefore, running the server locally on your machine will not work.
 
-    $ python mail_corpus.py emails.mbox youremail1@example.com youremail2@example.com ...
+You can run this example on a cloud service provider like Heroku, Google Cloud Platform or AWS. Note that webhooks must have a valid SSL certificate, signed by a certificate authority. Read more about setting up SSL for a [Webhook](https://developers.facebook.com/docs/graph-api/webhooks#setup).
 
-This will grab the text from all emails from the specified addresses (it tries to not include text responded to, signatures and so on), and create a corpus from it.
+## Webhook
 
-## Starting the server
+All webhook code is in `app.js`. It is routed to `/webhook`. This project handles callbacks for authentication, messages, delivery confirmation and postbacks. More details are available at the [reference docs](https://developers.facebook.com/docs/messenger-platform/webhook-reference).
 
-Is just a matter of
+## "Send to Messenger" and "Message Us" Plugin
 
-    $ python server.py
+An example of the "Send to Messenger" plugin and "Message Us" plugin are located at `index.html`. The "Send to Messenger" plugin can be used to trigger an authentication event. More details are available at the [reference docs](https://developers.facebook.com/docs/messenger-platform/plugin-reference).
 
-## TODO
+## License
 
-* A big corpus takes a loooong time to load
-* Tests
-* Send structured messages
-* Handle postbacks
+See the LICENSE file in the root directory of this source tree. Feel free to useand modify the code.
