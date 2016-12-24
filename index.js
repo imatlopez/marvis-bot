@@ -75,7 +75,7 @@ app.get('/webhook', (req, res) => {
 });
 
 // The main message handler
-app.post('/', (req, res) => {
+app.post('/webhook', (req, res) => {
   // Parsing the Messenger API response
   const messaging = FB.getFirstMessagingEntry(req.body);
   if (messaging && messaging.message) {
