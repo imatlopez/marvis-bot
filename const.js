@@ -11,7 +11,6 @@ const FB_PAGE_TOKEN = process.env.FB_PAGE_TOKEN;
 
 var FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 if (!FB_VERIFY_TOKEN) {
-  console.log("Replacing by WIT_TOKEN: " + WIT_TOKEN);
   FB_VERIFY_TOKEN = WIT_TOKEN;
 }
 
