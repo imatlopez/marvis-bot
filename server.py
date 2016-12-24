@@ -74,8 +74,10 @@ def messenger(token, recipient, text):
     """Send the message text to recipient with id recipient.
 
     """
-
-    text = text.decode('unicode_escape')
+    if type(text) is dict:
+        text = "I am witless."
+    else:
+        text = text.decode('unicode_escape')
     r = requests.post("https://graph.facebook.com/v2.6/me/messages",
                       params={"access_token": token},
                       data=json.dumps({
