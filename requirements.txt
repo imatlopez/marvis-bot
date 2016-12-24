@@ -1,6 +1,4 @@
 flask
 gunicorn
-Pip
 pywit
 requests
-Setuptools
