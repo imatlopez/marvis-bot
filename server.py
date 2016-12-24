@@ -13,13 +13,13 @@ app = Flask(__name__)
 with open('.fb_oauth', 'r') as fb_oauth:
     PAT = fb_oauth.read().replace('\n', '')
 
-handshake = 'my_voice_is_my_password_verify_me'
+MYA = 'my_voice_is_my_password_verify_me'
 
 
 @app.route('/', methods=['GET'])
 def handle_verification():
     print("Handling Verification.")
-    if request.args.get('hub.verify_token', '') == handshake:
+    if request.args.get('hub.verify_token', '') == MYA:
         print("Verification successful!")
         return request.args.get('hub.challenge', '')
     else:
@@ -33,8 +33,7 @@ def handle_messages():
     payload = request.get_data()
     for sender, message in messaging_events(payload):
         print("Incoming from %s: %s" % (sender, message))
-        print("Server: " + message)
-        send_message(PAT, sender, parse.message(message))
+        messenger(PAT, sender, parse.message(message))
     return "ok"
 
 
@@ -53,7 +52,7 @@ def messaging_events(payload):
             yield sender, "I can't echo this"
 
 
-def send_message(token, recipient, text):
+def messenger(token, recipient, text):
     """Send the message text to recipient with id recipient.
 
     """
