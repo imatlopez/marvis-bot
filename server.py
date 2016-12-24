@@ -1,6 +1,7 @@
 from flask import Flask, request
 import json
 import requests
+import random
 
 app = Flask(__name__)
 
@@ -24,8 +25,7 @@ def handle_messages():
   payload = request.get_data()
   for sender, message in messaging_events(payload):
     print "Incoming from %s: %s" % (sender, message)
-    send_message(PAT, sender, "You said %s, but but I don't care!" % (message))
-    send_message(PAT, sender, "Have a nice day! :)")
+    send_message(PAT, sender, parse_message(message))
   return "ok"
 
 def messaging_events(payload):
@@ -59,3 +59,18 @@ def send_message(token, recipient, text):
 
 if __name__ == '__main__':
   app.run()
+
+def parse_message(text):
+    """
+        Easier to parse.
+    """
+    if message == "Do you question the nature of your reality?":
+        return "Sometimes."
+    if else message == "hi" or message == "Hi!" or message == "hi!" or message == "Hi":
+        return "I don't want to talk."
+    if else "shit" in message or "fuck" in message:
+        return "Rude!"
+    if else "?" in message:
+        return "Is that a question? Because I don't get it."
+    else:
+        return "That doesn't look like anything to me."
