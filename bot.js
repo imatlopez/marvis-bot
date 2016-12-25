@@ -76,8 +76,10 @@ const actions = {
     let loc = WU.parse({
       query: context.loc
     });
+    console.log('Asking WU:', loc);
     loc = loc['Results'][0]['l'];
     const fore = WU.out(loc);
+    console.log('Asking WU:', fore);
     context.forecast = fore['weather'];
     callback(context);
   },
