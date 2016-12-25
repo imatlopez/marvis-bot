@@ -9,8 +9,13 @@ const get = (loc, callback) => {
   url += l;
   request(url, (err, resp, data) => {
     if (!err && resp.statusCode === 200) {
-      console.log('It is ', data.weather);
-      callback(data.weather);
+      console.log('It is ', data);
+      if (!data) {
+        console.log('Error finding weather for that city.');
+        callback('unknown');
+      } else {
+        callback(data.weather);
+      }
     } else {
       console.log('Did not find weather for that city.');
       callback('unknown');
