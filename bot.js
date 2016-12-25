@@ -80,8 +80,8 @@ const actions = {
         callback(err || data.error && data.error.message, data);
       }
       loc = data;
+      console.log('Asking WU:', loc);
     });
-    console.log('Asking WU:', loc);
     try {
       loc = loc['Results'][0]['l'];
       const fore = WU.out(loc);
