@@ -73,8 +73,14 @@ const actions = {
 
   // fetch-weather bot executes
   ['fetch-weather'](sessionId, context, callback) {
-    let loc = WU.parse({
+    let loc;
+    WU.parse({
       query: context.loc
+    }, (err, resp, data) => {
+      if (callback) {
+        callback(err || data.error && data.error.message, data);
+      }
+      loc = resp;
     });
     console.log('Asking WU:', loc);
     loc = loc['Results'][0]['l'];

@@ -14,8 +14,22 @@ if (!FB_VERIFY_TOKEN) {
   FB_VERIFY_TOKEN = WIT_TOKEN;
 }
 
+// Weather Underground API
+const WU_TOKEN = process.env.WU_TOKEN;
+if (!WU_TOKEN) {
+  throw new Error('missing WU_TOKEN');
+}
+
+// Weather Underground API
+const GMAPS_TOKEN = process.env.GMAPS_TOKEN;
+if (!GMAPS_TOKEN) {
+  throw new Error('missing GMAPS_TOKEN');
+}
+
 module.exports = {
+  WU_TOKEN: WU_TOKEN,
   WIT_TOKEN: WIT_TOKEN,
+  GMAPS_TOKEN: GMAPS_TOKEN,
   FB_PAGE_TOKEN: FB_PAGE_TOKEN,
   FB_VERIFY_TOKEN: FB_VERIFY_TOKEN
 };
