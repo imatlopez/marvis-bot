@@ -4,7 +4,7 @@
 // See https://wit.ai/sungkim/weather/stories and https://wit.ai/docs/quickstart
 const Wit = require('node-wit').Wit;
 const FB = require('./facebook.js');
-const tokens = require('./tokens.js');
+const tokens = require('./token.js');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
