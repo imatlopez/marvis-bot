@@ -4,7 +4,7 @@
 // See https://wit.ai/sungkim/weather/stories and https://wit.ai/docs/quickstart
 const Wit = require('node-wit').Wit;
 const FB = require('./facebook.js');
-const Config = require('./const.js');
+const tokens = require('./tokens.js');
 
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
@@ -19,49 +19,51 @@ const firstEntityValue = (entities, entity) => {
 
 // Bot actions
 const actions = {
-  say(sessionId, context, message, cb) {
+  say(sessionId, context, message, callback) {
     console.log(message);
 
-    // Bot testing mode, run cb() and return
+    // Bot testing mode, run callback() and return
     if (require.main === module) {
-      cb();
+      callback();
       return;
     }
 
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to from context
     // TODO: need to get Facebook user name
-    const recipientId = context._fbid_;
-    if (recipientId) {
+    const id = context.FB_ID;
+    if (id) {
       // Yay, we found our recipient!
       // Let's forward our bot response to her.
-      FB.fbMessage(recipientId, message, (err, data) => {
+      FB.message(id, message, (err, data) => {
         if (err) {
           console.log(
             'Oops! An error occurred while forwarding the response to',
-            recipientId,
+            id,
             ':',
             err
           );
+        } else {
+          console.log('Sending:', data);
         }
 
         // Let's give the wheel back to our bot
-        cb();
+        callback();
       });
     } else {
       console.log('Oops! Couldn\'t find user in context:', context);
       // Giving the wheel back to our bot
-      cb();
+      callback();
     }
   },
-  merge(sessionId, context, entities, message, cb) {
+  merge(sessionId, context, entities, message, callback) {
     // Retrieve the location entity and store it into a context field
     const loc = firstEntityValue(entities, 'location');
     if (loc) {
       context.loc = loc; // store it in context
     }
 
-    cb(context);
+    callback(context);
   },
 
   error(sessionId, context, error) {
@@ -74,12 +76,12 @@ const actions = {
     // context.forecast = apiCall(context.loc)
     context.forecast = 'sunny';
     cb(context);
-  },
+  }
 };
 
 
 const getWit = () => {
-  return new Wit(Config.WIT_TOKEN, actions);
+  return new Wit(tokens.WIT_TOKEN, actions);
 };
 
 exports.getWit = getWit;
@@ -87,7 +89,7 @@ exports.getWit = getWit;
 // bot testing mode
 // http://stackoverflow.com/questions/6398196
 if (require.main === module) {
-  console.log("Bot testing mode.");
+  console.log('Bot testing mode.');
   const client = getWit();
   client.interactive();
 }

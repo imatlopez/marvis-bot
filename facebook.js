@@ -3,34 +3,33 @@
 // See the Send API reference
 // https://developers.facebook.com/docs/messenger-platform/send-api-reference
 const request = require('request');
-const Config = require('./const.js');
+const tokens = require('./token.js');
 
-const fbReq = request.defaults({
-  uri: 'https://graph.facebook.com/me/messages',
+const out = request.defaults({
+  uri: 'https://graph.facebook.com/v2.6/me/messages',
   method: 'POST',
-  json: true,
-  qs: {
-    access_token: Config.FB_PAGE_TOKEN
-  },
-  headers: {
+  json: true, headers: {
     'Content-Type': 'application/json'
   },
+  qs: {
+    access_token: tokens.FB_PAGE_TOKEN
+  }
 });
 
 
-const fbMessage = (recipientId, msg, cb) => {
+const message = (recipientId, msg, cb) => {
   const opts = {
     form: {
       recipient: {
-        id: recipientId,
+        id: recipientId
       },
       message: {
-        text: msg,
-      },
-    },
+        text: msg
+      }
+    }
   };
 
-  fbReq(opts, (err, resp, data) => {
+  out(opts, (err, resp, data) => {
     if (cb) {
       cb(err || data.error && data.error.message, data);
     }
@@ -40,7 +39,7 @@ const fbMessage = (recipientId, msg, cb) => {
 
 // See the Webhook reference
 // https://developers.facebook.com/docs/messenger-platform/webhook-reference
-const getFirstMessagingEntry = (body) => {
+const getMessage = (body) => {
   const val = body.object === 'page' &&
     body.entry &&
     Array.isArray(body.entry) &&
@@ -56,7 +55,7 @@ const getFirstMessagingEntry = (body) => {
 
 
 module.exports = {
-  getFirstMessagingEntry: getFirstMessagingEntry,
-  fbMessage: fbMessage,
-  fbReq: fbReq
+  getMessage: getMessage,
+  message: message,
+  out: out
 };

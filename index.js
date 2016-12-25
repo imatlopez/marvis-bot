@@ -11,7 +11,7 @@ const express = require('express');
 
 // get Bot, const, and Facebook API
 const bot = require('./bot.js');
-const Config = require('./const.js');
+const tokens = require('./token.js');
 const FB = require('./facebook.js');
 
 // Setting up our bot
@@ -20,31 +20,31 @@ const wit = bot.getWit();
 // Webserver parameter
 const PORT = process.env.PORT || 8445;
 
-// Wit.ai bot specific code
+/*
+  Wit.ai bot specific code
+*/
 
-// This will contain all user sessions.
-// Each session has an entry:
-// sessionId -> {fbid: facebookUserId, context: sessionState}
+// This will contain all user sessions. Each session has an entry:
+// sessionId -> {id: facebookUserId, context: sessionState}
 const sessions = {};
 
-const findOrCreateSession = (fbid) => {
+const getSession = (id) => {
   let sessionId;
-  // Let's see if we already have a session for the user fbid
-  Object.keys(sessions).forEach(k => {
-    if (sessions[k].fbid === fbid) {
-      // Yep, got it!
+  // Let's see if we already have a session for the user id
+  Object.keys(sessions).forEach((k) => {
+    if (sessions[k].id === id) {
       sessionId = k;
     }
   });
+  // No session found for user id, let's create a new one
   if (!sessionId) {
-    // No session found for user fbid, let's create a new one
     sessionId = new Date().toISOString();
     sessions[sessionId] = {
-      fbid: fbid,
+      id: id,
       context: {
-        _fbid_: fbid
+        FB_ID: id
       }
-    }; // set context, _fid_
+    }; // set context, _fbid_
   }
   return sessionId;
 };
@@ -54,20 +54,20 @@ const app = express();
 app.set('port', PORT);
 app.listen(app.get('port'));
 app.use(bodyParser.json());
-console.log("I'm wating for you @" + PORT);
+console.log('I\'m wating for you @' + PORT);
 
 // index. Let's say something fun
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.send('"Only those who will risk going too far can possibly find out how far one can go." - T.S. Eliot');
 });
 
 // Webhook verify setup using FB_VERIFY_TOKEN
 app.get('/webhook', (req, res) => {
-  if (!Config.FB_VERIFY_TOKEN) {
+  if (!tokens.FB_VERIFY_TOKEN) {
     throw new Error('missing FB_VERIFY_TOKEN');
   }
   if (req.query['hub.mode'] === 'subscribe' &&
-    req.query['hub.verify_token'] === Config.FB_VERIFY_TOKEN) {
+    req.query['hub.verify_token'] === tokens.FB_VERIFY_TOKEN) {
     res.send(req.query['hub.challenge']);
   } else {
     res.sendStatus(400);
@@ -77,39 +77,32 @@ app.get('/webhook', (req, res) => {
 // The main message handler
 app.post('/webhook', (req, res) => {
   // Parsing the Messenger API response
-  const messaging = FB.getFirstMessagingEntry(req.body);
-  if (messaging && messaging.message) {
-
-    // Yay! We got a new message!
+  const mail = FB.getMessage(req.body);
+  if (mail && mail.message) { // Yay! We got a new message!
 
     // We retrieve the Facebook user ID of the sender
-    const sender = messaging.sender.id;
+    const sender = mail.sender.id;
 
     // We retrieve the user's current session, or create one if it doesn't exist
     // This is needed for our bot to figure out the conversation history
-    const sessionId = findOrCreateSession(sender);
+    const id = getSession(sender);
 
     // We retrieve the message content
-    const msg = messaging.message.text;
-    const atts = messaging.message.attachments;
+    const msg = mail.message.text;
+    const atts = mail.message.attachments;
 
-    if (atts) {
-      // We received an attachment
-
+    if (atts) { // We received an attachment
       // Let's reply with an automatic message
-      FB.fbMessage(
-        sender,
+      FB.message(sender,
         'Sorry I can only process text messages for now.'
       );
-    } else if (msg) {
-      // We received a text message
-
+    } else if (msg) { // We received a text message
       // Let's forward the message to the Wit.ai Bot Engine
       // This will run all actions until our bot has nothing left to do
       wit.runActions(
-        sessionId, // the user's current session
+        id, // the user's current session
         msg, // the user's message
-        sessions[sessionId].context, // the user's current session state
+        sessions[id].context, // the user's current session state
         (error, context) => {
           if (error) {
             console.log('Oops! Got an error from Wit:', error);
@@ -126,7 +119,7 @@ app.post('/webhook', (req, res) => {
             // }
 
             // Updating the user's current session state
-            sessions[sessionId].context = context;
+            sessions[id].context = context;
           }
         }
       );

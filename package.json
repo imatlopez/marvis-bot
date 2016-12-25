@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "body-parser": "^1.15.0",
+    "eslint": "^3.12.2",
     "express": "^4.13.4",
     "node-wit": "^3.2.2",
     "node-uuid": "^1.4.7",
@@ -28,10 +29,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hunkim/Wit-Facebook.git"
+    "url": "https://www.github.com/imatlopez/marvis-bot"
   },
   "bugs": {
-    "url": "https://github.com/hunkim/Wit-Facebook/issues"
+    "url": "https://www.github.com/imatlopez/marvis-bot/issues"
   },
-  "homepage": "https://github.com/hunkim/Wit-Facebook#readme"
+  "homepage": "http://www.imatlopez.com/"
 }
