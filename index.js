@@ -62,7 +62,7 @@ app.get('/', (req, res) => {
 });
 
 // Webhook verify setup using FB_VERIFY_TOKEN
-app.get('/webhook', (req, res) => {
+app.get('/webhook/', (req, res) => {
   if (!tokens.FB_VERIFY_TOKEN) {
     throw new Error('missing FB_VERIFY_TOKEN');
   }
@@ -75,7 +75,7 @@ app.get('/webhook', (req, res) => {
 });
 
 // The main message handler
-app.post('/webhook', (req, res) => {
+app.post('/webhook/', (req, res) => {
   // Parsing the Messenger API response
   const mail = FB.getMessage(req.body);
   if (mail && mail.message) { // Yay! We got a new message!
