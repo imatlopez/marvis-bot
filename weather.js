@@ -7,6 +7,7 @@ const get = (loc, callback) => {
   let url = 'http://api.wunderground.com/api/' + tokens.WU_TOKEN + '/condition';
   const l = loc.RESULTS[0].l;
   url += l;
+  console.log('Asking WU:', url);
   request(url, (err, resp, data) => {
     if (!err && resp.statusCode === 200) {
       console.log('It is ', data);
