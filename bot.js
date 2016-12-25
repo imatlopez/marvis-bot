@@ -73,12 +73,14 @@ const actions = {
   // fetch-weather bot executes
   ['fetch-weather'](sessionId, context, callback) {
     WU.parse(context.loc, (loc) => {
+      console.log('Looking up weather in', loc.RESULTS[0].name);
       if (loc) {
         WU.get(loc, (forecast) => {
           context.forecast = forecast;
           callback(context);
         });
       } else {
+        console.log('Did not find that city.');
         context.forecast = 'unknown';
         callback(context);
       }
