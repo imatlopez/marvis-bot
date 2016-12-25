@@ -4,6 +4,7 @@
 // See https://wit.ai/sungkim/weather/stories and https://wit.ai/docs/quickstart
 const Wit = require('node-wit').Wit;
 const FB = require('./facebook.js');
+const WU = require('./weather.js');
 const tokens = require('./token.js');
 
 const firstEntityValue = (entities, entity) => {
@@ -72,9 +73,12 @@ const actions = {
 
   // fetch-weather bot executes
   ['fetch-weather'](sessionId, context, callback) {
-    // Here should go the api call, e.g.:
-    // context.forecast = apiCall(context.loc)
-    context.forecast = 'sunny';
+    let loc = WU.parse({
+      query: context.loc
+    });
+    loc = loc['Results'][0]['l'];
+    const fore = WU.out(loc);
+    context.forecast = fore['weather'];
     callback(context);
   },
 

@@ -17,7 +17,7 @@ const out = request.defaults({
 });
 
 
-const message = (recipientId, msg, cb) => {
+const message = (recipientId, msg, callback) => {
   const opts = {
     form: {
       recipient: {
@@ -30,8 +30,8 @@ const message = (recipientId, msg, cb) => {
   };
 
   out(opts, (err, resp, data) => {
-    if (cb) {
-      cb(err || data.error && data.error.message, data);
+    if (callback) {
+      callback(err || data.error && data.error.message, data);
     }
   });
 };
