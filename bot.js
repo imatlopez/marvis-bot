@@ -21,7 +21,6 @@ const firstEntityValue = (entities, entity) => {
 // Bot actions
 const actions = {
   say(sessionId, context, message, callback) {
-    console.log(message);
 
     // Bot testing mode, run callback() and return
     if (require.main === module) {
@@ -80,13 +79,17 @@ const actions = {
       if (callback) {
         callback(err || data.error && data.error.message, data);
       }
-      loc = resp;
+      loc = data;
     });
     console.log('Asking WU:', loc);
-    loc = loc['Results'][0]['l'];
-    const fore = WU.out(loc);
-    console.log('Asking WU:', fore);
-    context.forecast = fore['weather'];
+    try {
+      loc = loc['Results'][0]['l'];
+      const fore = WU.out(loc);
+      console.log('Asking WU:', fore);
+      context.forecast = fore['weather'];
+    } catch (e) {
+      context.forecast = 'sunny';
+    }
     callback(context);
   },
 

@@ -14,7 +14,7 @@ const get = (loc, callback) => {
 
 const parse = request.defaults({
   uri: 'http://autocomplete.wunderground.com/aq',
-  method: 'POST',
+  method: 'GET',
   json: true, headers: {
     'Content-Type': 'application/json'
   }

@@ -106,11 +106,7 @@ app.post('/', (req, res) => {
             // Now it's waiting for further messages to proceed.
             console.log('Waiting for futher messages.');
 
-            if (context['done']) {
-              delete sessions[id];
-            } else {
-              sessions[id].context = context;
-            }
+            sessions[id].context = context;
           }
         }
       );
