@@ -71,11 +71,17 @@ const actions = {
   },
 
   // fetch-weather bot executes
-  ['fetch-weather'](sessionId, context, cb) {
+  ['fetch-weather'](sessionId, context, callback) {
     // Here should go the api call, e.g.:
     // context.forecast = apiCall(context.loc)
     context.forecast = 'sunny';
-    cb(context);
+    callback(context);
+  },
+
+  // fetch-weather bot executes
+  ['done'](sessionId, context, callback) {
+    context.done = true;
+    callback(context);
   }
 };
 
