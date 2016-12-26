@@ -48,6 +48,10 @@ const actions = {
     return context;
   },
 
+  error(request, response) {
+    console.log(response.text);
+  },
+
   wuLocation(request) {
     let { entities, context } = request;
     let location = getEntity(entities, 'location');
