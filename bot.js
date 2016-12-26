@@ -3,6 +3,7 @@
 // Weather Example
 // See https://wit.ai/sungkim/weather/stories and https://wit.ai/docs/quickstart
 const Wit = require('node-wit').Wit;
+const FB = require('./facebook.js');
 // const WU = require('./weather.js');
 const tokens = require('./token.js');
 
@@ -22,6 +23,27 @@ const actions = {
   send(request, response) {
     console.log('user said...', JSON.stringify(request));
     console.log('sending...', JSON.stringify(response));
+  },
+
+  say(request) {
+    let { context, text } = request;
+    // Our bot has something to say!
+    // Let's retrieve the Facebook user whose session belongs to from context
+    // TODO: need to get Facebook user name
+    const id = context.fbid;
+    if (id) {
+      // Yay, we found our recipient!
+      FB.message(id, text, (err, data) => {
+        if (err) {
+          console.log('Oops! An error occurred while forwarding the response to', id, ':', err);
+        } else {
+          console.log('Sending:', data);
+        }
+      });
+    } else {
+      console.log('Oops! Couldn\'t find user in context:', context);
+    }
+    return context;
   },
 
   getForecast(request) {
@@ -45,11 +67,3 @@ const getWit = () => {
 };
 
 exports.getWit = getWit;
-
-// bot testing mode
-// http://stackoverflow.com/questions/6398196
-if (require.main === module) {
-  console.log('Bot testing mode.');
-  const client = getWit();
-  client.interactive();
-}

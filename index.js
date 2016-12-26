@@ -41,7 +41,9 @@ const getSession = (fbid) => {
     sessionId = new Date().toISOString();
     sessions[sessionId] = {
       fbid: fbid,
-      context: {}
+      context: {
+        fbid: fbid
+      }
     }; // set context, _fbid_
   }
   return sessionId;
