@@ -10,6 +10,8 @@ const get = (link) => {
   return rp({
     uri: fullURL,
     method: 'GET'
+  }).then((response) => {
+    return JSON.parse(response);
   });
 };
 
@@ -20,6 +22,8 @@ const location = (query) => {
     qs: {
       query: query
     }
+  }).then((response) => {
+    return JSON.parse(response);
   });
 };
 
