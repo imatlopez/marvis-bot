@@ -46,8 +46,8 @@ const getWit = () => {
         let location = firstEntityValue(entities, 'location');
         if (location) {
           return WU.loc(location).then((response) => {
-            console.log('WU:', response);
-            context.location = location;
+            context.location = response.RESULTS[0].name;
+            context.link = response.RESULTS[0].l;
             delete context.missingLocation;
             return context;
           }).catch((error) => {
@@ -62,12 +62,19 @@ const getWit = () => {
       },
       wuForecast({ context }) {
         if (context.location) {
-          context.forecast = 'sunny';
-          delete context.missingForecast;
+          return WU.get(context.link).then((response) => {
+            context.forecast = response.condition;
+            delete context.missingForecast;
+            return context;
+          }).catch((error) => {
+            console.log('Weatherunderground encountered an error:', error);
+            context.missingForecast = true;
+            return context;
+          });
         } else {
           context.missingForecast = true;
+          return context;
         }
-        return context;
       }
     }
   });

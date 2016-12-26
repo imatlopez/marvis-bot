@@ -3,14 +3,14 @@
 const tokens = require('./token.js');
 const rp = require('request-promise');
 
-const get = (location) => {
+const get = (link) => {
   const wuURL = 'http://api.wunderground.com/api/' + tokens.WU_TOKEN + '/';
-  const API = 'geolookup/condition/q/';
-  const fullURL = wuURL + API + encodeURIComponent(location) + '.json';
+  const API = 'condition';
+  const fullURL = wuURL + API + link;
   return rp({
     uri: fullURL,
     method: 'GET'
-  }).then((response) => Promise.all([response.json(), response.status]));
+  });
 };
 
 const location = (query) => {
