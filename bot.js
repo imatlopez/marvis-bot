@@ -2,7 +2,7 @@
 
 const Wit = require('node-wit').Wit;
 const FB = require('./facebook.js');
-// const WU = require('./weather.js');
+const WU = require('./weather.js');
 const tokens = require('./token.js');
 
 const firstEntityValue = (entities, entity) => {
@@ -45,6 +45,8 @@ const getWit = () => {
       wuLocation({ context, entities }) {
         let location = firstEntityValue(entities, 'location');
         if (location) {
+          const response = WU.loc(location);
+          console.log('WU Received:', JSON.stringify(response));
           context.location = location;
           delete context.missingLocation;
         } else {

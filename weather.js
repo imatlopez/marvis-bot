@@ -1,49 +1,29 @@
 'use strict';
 
-const request = require('request');
 const tokens = require('./token.js');
+const rp = require('request-promise');
 
-const get = (loc, callback) => {
-  let url = 'http://api.wunderground.com/api/' + tokens.WU_TOKEN + '/condition';
-  const l = loc.RESULTS[0].l;
-  url += l;
-  console.log('Asking WU:', url);
-  request(url, (err, resp, data) => {
-    if (!err && resp.statusCode === 200) {
-      console.log('It is ', data);
-      if (!data) {
-        console.log('Error finding weather for that city.');
-        callback('unknown');
-      } else {
-        callback(data.weather);
-      }
-    } else {
-      console.log('Did not find weather for that city.');
-      callback('unknown');
-    }
-  });
+const get = (location) => {
+  const wuURL = 'http://api.wunderground.com/api/' + tokens.WU_TOKEN + '/';
+  const API = 'geolookup/condition/q/';
+  const fullURL = wuURL + API + encodeURIComponent(location) + '.json';
+  return rp({
+    uri: fullURL,
+    method: 'GET'
+  }).then((response) => Promise.all([response.json(), response.status]));
 };
 
-const parse = (loc, callback) => {
-  request({
-    uri: 'http://autocomplete.wunderground.com/aq',
-    method: 'GET',
-    json: true, headers: {
-      'Content-Type': 'application/json'
-    },
-    qs: {
-      query: loc
-    }
-  }, (err, resp, data) => {
-    if (!err && resp.statusCode === 200) {
-      callback(data);
-    } else {
-      callback(undefined);
-    }
-  });
+const location = (query) => {
+  const acURL = 'http://autocomplete.wunderground.com/aq';
+  const qs = '?=query' + query;
+  const fullURL = acURL + qs;
+  return rp({
+    uri: fullURL,
+    method: 'GET'
+  }).then((response) => Promise.all([response.json(), response.status]));
 };
 
 module.exports = {
-  parse: parse,
+  loc: location,
   get: get
 };
