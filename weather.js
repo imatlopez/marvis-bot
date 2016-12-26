@@ -6,7 +6,7 @@ const rp = require('request-promise');
 const get = (link) => {
   const wuURL = 'http://api.wunderground.com/api/' + tokens.WU_TOKEN + '/';
   const API = 'conditions';
-  const fullURL = wuURL + API + link;
+  const fullURL = wuURL + API + link + '.json';
   console.log('To WU:', fullURL);
   return rp({
     uri: fullURL,
