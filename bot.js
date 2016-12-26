@@ -20,10 +20,6 @@ const getEntity = (entities, entity) => {
 
 // Bot actions
 const actions = {
-  send(request, response) {
-    console.log('user said...', JSON.stringify(request));
-    console.log('sending...', JSON.stringify(response));
-  },
 
   say(request) {
     let { context, text } = request;
@@ -43,6 +39,12 @@ const actions = {
     } else {
       console.log('Oops! Couldn\'t find user in context:', context);
     }
+    return context;
+  },
+
+  merge(request) {
+    let { context } = request;
+    // Retrieve the location entity and store it into a context field
     return context;
   },
 
