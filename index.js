@@ -56,6 +56,11 @@ app.listen(app.get('port'));
 app.use(bodyParser.json());
 console.log('I\'m wating for you @' + PORT);
 
+// index. Let's say something fun
+app.get('/', (req, res) => {
+  res.send('"Only those who will risk going too far can possibly find out how far one can go." - T.S. Eliot');
+});
+
 // Webhook verify setup using FB_VERIFY_TOKEN
 app.get('/webhook/', (req, res) => {
   if (!tokens.FB_VERIFY_TOKEN) {
@@ -70,7 +75,7 @@ app.get('/webhook/', (req, res) => {
 });
 
 // The main message handler
-app.post('/', (req, res) => {
+app.post('/webhook/', (req, res) => {
   // Parsing the Messenger API response
   const mail = FB.getMessage(req.body);
   if (mail && mail.message) { // Yay! We got a new message!
