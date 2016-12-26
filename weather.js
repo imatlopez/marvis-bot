@@ -20,7 +20,7 @@ const location = (query) => {
   return rp({
     uri: fullURL,
     method: 'GET'
-  }).then((response) => Promise.all([response.json(), response.status]));
+  });
 };
 
 module.exports = {
