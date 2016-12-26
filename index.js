@@ -98,13 +98,9 @@ app.post('/webhook/', (req, res) => {
         sessions[fbid].context  // the user's current session state
       ).then((context) => {
         console.log('Waiting for futher messages.');
-        if (context.done) {
-          sessions[fbid].context = {};
-        } else {
-          sessions[fbid].context = context;
-        }
-      }).catch((err) => {
-        console.error('Oops! Got an error from Wit: ', err.stack || err);
+        sessions[fbid].context = context;
+      }).catch((error) => {
+        console.log('Oops! Got an error from Wit:', error);
       });
     }
   }

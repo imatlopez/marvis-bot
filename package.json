@@ -12,20 +12,20 @@
   "license": "MIT",
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "unmockedModulePathPatterns": ["core-js/.*", "sshpk/.*"]
+    "unmockedModulePathPatterns": ["core-js/.*"]
   },
   "dependencies": {
-    "body-parser": "^1.15.0",
+    "body-parser": "^1.15.2",
     "eslint": "^3.12.2",
-    "express": "^4.13.4",
-    "node-wit": "^3.2.2",
+    "express": "^4.14.0",
+    "node-wit": "^4.2.0",
     "node-uuid": "^1.4.7",
-    "request": "^2.72.0",
-    "babel-core": "^6.0.0",
-    "babel-jest": "^6.0.1",
-    "babel-polyfill": "^6.1.4",
-    "bl": "^1.0.0",
-    "jest-cli": "^0.7.1"
+    "request": "^2.79.0",
+    "babel-core": "^6.21.0",
+    "babel-jest": "^17.0.2",
+    "babel-polyfill": "^6.20.0",
+    "jest-cli": "^18.0.0",
+    "bl": "^1.2.0"
   },
   "repository": {
     "type": "git",
