@@ -21,15 +21,14 @@ const getEntity = (entities, entity) => {
 // Bot actions
 const actions = {
 
-  say(request) {
-    let { context, text } = request;
+  say(sessionId, context, message, callback) {
     // Our bot has something to say!
     // Let's retrieve the Facebook user whose session belongs to from context
     // TODO: need to get Facebook user name
     const id = context.fbid;
     if (id) {
       // Yay, we found our recipient!
-      FB.message(id, text, (err, data) => {
+      FB.message(id, message, (err, data) => {
         if (err) {
           console.log('Oops! An error occurred while forwarding the response to', id, ':', err);
         } else {
@@ -39,39 +38,47 @@ const actions = {
     } else {
       console.log('Oops! Couldn\'t find user in context:', context);
     }
-    return context;
+    callback();
   },
 
-  merge(request) {
-    let { context } = request;
-    // Retrieve the location entity and store it into a context field
-    return context;
+  merge(sessionId, context, entities, message, callback) {
+    const intent = getEntity(entities, 'intent');
+    switch (intent) {
+      case 'weather':
+        const location = getEntity(entities, 'location');
+        if (location) {
+          context.location = location;
+          delete context.missingLocation;
+        } else {
+          context.missingLocation = true;
+        }
+        break;
+      default:
+        console.log('No intent merged.');
+    }
+    callback(context);
   },
 
-  error(request, response) {
-    console.log(response.text);
+  error(sessionId, context, error) {
+    console.log(error.message);
   },
 
-  wuLocation(request) {
-    let { entities, context } = request;
-    let location = getEntity(entities, 'location');
-    if (location) {
-      context.location = location;
-      delete context.missingLocation;
+  wuLocation(sessionId, context, callback) {
+    if (context.location) {
+      // TODO
     } else {
       context.missingLocation = true;
     }
-    return context;
+    callback(context);
   },
-  wuForecast(request) {
-    let { context } = request;
+  wuForecast(sessionId, context, callback) {
     if (context.location) {
       context.forecast = 'sunny';
       delete context.missingForecast;
     } else {
       context.missingForecast = true;
     }
-    return context;
+    callback(context);
   }
 };
 
