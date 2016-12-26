@@ -46,16 +46,24 @@ const actions = {
     return context;
   },
 
-  getForecast(request) {
+  wuLocation(request) {
     let { entities, context } = request;
     let location = getEntity(entities, 'location');
     if (location) {
       context.location = location;
-      context.forecast = 'sunny';
       delete context.missingLocation;
     } else {
       context.missingLocation = true;
-      delete context.forecast;
+    }
+    return context;
+  },
+  wuForecast(request) {
+    let { context } = request;
+    if (context.location) {
+      context.forecast = 'sunny';
+      delete context.missingForecast;
+    } else {
+      context.missingForecast = true;
     }
     return context;
   }
