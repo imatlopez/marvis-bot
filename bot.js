@@ -3,11 +3,10 @@
 // Weather Example
 // See https://wit.ai/sungkim/weather/stories and https://wit.ai/docs/quickstart
 const Wit = require('node-wit').Wit;
-const FB = require('./facebook.js');
-const WU = require('./weather.js');
+// const WU = require('./weather.js');
 const tokens = require('./token.js');
 
-const firstEntityValue = (entities, entity) => {
+const getEntity = (entities, entity) => {
   const val = entities && entities[entity] &&
     Array.isArray(entities[entity]) &&
     entities[entity].length > 0 &&
@@ -20,77 +19,23 @@ const firstEntityValue = (entities, entity) => {
 
 // Bot actions
 const actions = {
-  say(sessionId, context, message, callback) {
+  send(request, response) {
+    console.log('user said...', JSON.stringify(request));
+    console.log('sending...', JSON.stringify(response));
+  },
 
-    // Bot testing mode, run callback() and return
-    if (require.main === module) {
-      callback();
-      return;
-    }
-
-    // Our bot has something to say!
-    // Let's retrieve the Facebook user whose session belongs to from context
-    // TODO: need to get Facebook user name
-    const id = context.FB_ID;
-    if (id) {
-      // Yay, we found our recipient!
-      // Let's forward our bot response to her.
-      FB.message(id, message, (err, data) => {
-        if (err) {
-          console.log(
-            'Oops! An error occurred while forwarding the response to',
-            id,
-            ':',
-            err
-          );
-        } else {
-          console.log('Sending:', data);
-        }
-
-        // Let's give the wheel back to our bot
-        callback();
-      });
+  getForecast(request) {
+    let { entities, context } = request;
+    let location = getEntity(entities, 'location');
+    if (location) {
+      context.location = location;
+      context.forecast = 'sunny';
+      delete context.missingLocation;
     } else {
-      console.log('Oops! Couldn\'t find user in context:', context);
-      // Giving the wheel back to our bot
-      callback();
+      context.missingLocation = true;
+      delete context.forecast;
     }
-  },
-  merge(sessionId, context, entities, message, callback) {
-    // Retrieve the location entity and store it into a context field
-    const loc = firstEntityValue(entities, 'location');
-    if (loc) {
-      context.loc = loc; // store it in context
-    }
-
-    callback(context);
-  },
-
-  error(sessionId, context, error) {
-    console.log(error.message);
-  },
-
-  // fetch-weather bot executes
-  ['fetch-weather'](sessionId, context, callback) {
-    WU.parse(context.loc, (loc) => {
-      console.log('Looking up weather in', loc.RESULTS[0].name);
-      if (loc) {
-        WU.get(loc, (forecast) => {
-          context.forecast = forecast;
-          callback(context);
-        });
-      } else {
-        console.log('Did not find that city.');
-        context.forecast = 'unknown';
-        callback(context);
-      }
-    });
-  },
-
-  // fetch-weather bot executes
-  ['done'](sessionId, context, callback) {
-    context.done = true;
-    callback(context);
+    return context;
   }
 };
 

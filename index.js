@@ -25,14 +25,14 @@ const PORT = process.env.PORT || 8445;
 */
 
 // This will contain all user sessions. Each session has an entry:
-// sessionId -> {id: facebookUserId, context: sessionState}
+// sessionId -> {fbid: facebookUserId, context: sessionState}
 const sessions = {};
 
-const getSession = (id) => {
+const getSession = (fbid) => {
   let sessionId;
   // Let's see if we already have a session for the user id
   Object.keys(sessions).forEach((k) => {
-    if (sessions[k].id === id) {
+    if (sessions[k].fbid === fbid) {
       sessionId = k;
     }
   });
@@ -40,10 +40,8 @@ const getSession = (id) => {
   if (!sessionId) {
     sessionId = new Date().toISOString();
     sessions[sessionId] = {
-      id: id,
-      context: {
-        FB_ID: id
-      }
+      fbid: fbid,
+      context: {}
     }; // set context, _fbid_
   }
   return sessionId;
@@ -75,41 +73,32 @@ app.post('/', (req, res) => {
   const mail = FB.getMessage(req.body);
   if (mail && mail.message) { // Yay! We got a new message!
 
-    // We retrieve the Facebook user ID of the sender
+    // We retrieve the Facebook user ID of the sender and link to bot's
+    // conversation history memory
     const sender = mail.sender.id;
-
-    // We retrieve the user's current session, or create one if it doesn't exist
-    // This is needed for our bot to figure out the conversation history
-    const id = getSession(sender);
+    const fbid = getSession(sender);
 
     // We retrieve the message content
-    const msg = mail.message.text;
-    const atts = mail.message.attachments;
+    const text = mail.message.text;
+    const attachments = mail.message.attachments;
 
-    if (atts) { // We received an attachment
-      // Let's reply with an automatic message
-      FB.message(sender,
-        'Sorry I can only process text messages for now.'
-      );
-    } else if (msg) { // We received a text message
-      // Let's forward the message to the Wit.ai Bot Engine
-      // This will run all actions until our bot has nothing left to do
+    if (attachments) { // We received an attachment
+      FB.message(sender, 'Sorry I can only process text messages for now.');
+    } else if (text) { // We received a text message
       wit.runActions(
-        id, // the user's current session
-        msg, // the user's message
-        sessions[id].context, // the user's current session state
-        (error, context) => {
-          if (error) {
-            console.log('Oops! Got an error from Wit:', error);
-          } else {
-            // Our bot did everything it has to do.
-            // Now it's waiting for further messages to proceed.
-            console.log('Waiting for futher messages.');
-
-            sessions[id].context = context;
-          }
+        fbid,                   // the user's current session
+        text,                   // the user's message
+        sessions[fbid].context  // the user's current session state
+      ).then((context) => {
+        console.log('Waiting for futher messages.');
+        if (context.done) {
+          sessions[fbid].context = {};
+        } else {
+          sessions[fbid].context = context;
         }
-      );
+      }).catch((err) => {
+        console.error('Oops! Got an error from Wit: ', err.stack || err);
+      });
     }
   }
   res.sendStatus(200);
