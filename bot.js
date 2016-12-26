@@ -1,7 +1,5 @@
 'use strict';
 
-// Weather Example
-// See https://wit.ai/sungkim/weather/stories and https://wit.ai/docs/quickstart
 const Wit = require('node-wit').Wit;
 const FB = require('./facebook.js');
 // const WU = require('./weather.js');
@@ -19,48 +17,48 @@ const firstEntityValue = (entities, entity) => {
   return typeof val === 'object' ? val.value : val;
 };
 
-const actions = {
-
-  send({ context }, { text }) {
-    const id = context.fbid;
-    if (id) {
-      // Yay, we found our recipient!
-      FB.message(id, text, (err, data) => {
-        if (err) {
-          console.log('Oops! An error occurred while forwarding the response to', id, ':', err);
-        } else {
-          console.log('Sending:', data);
-        }
-      });
-    } else {
-      console.log('Oops! Couldn\'t find user in context:', context);
-    }
-  },
-
-  wuLocation({ context, entities }) {
-    let location = firstEntityValue(entities, 'location');
-    if (location) {
-      context.location = location;
-      delete context.missingLocation;
-    } else {
-      context.missingLocation = true;
-    }
-    return context;
-  },
-  wuForecast({ context }) {
-    if (context.location) {
-      context.forecast = 'sunny';
-      delete context.missingForecast;
-    } else {
-      context.missingForecast = true;
-    }
-    return context;
-  }
-};
-
-
 const getWit = () => {
-  return new Wit(tokens.WIT_TOKEN, actions);
+  return new Wit({
+    accessToken: tokens.WIT_TOKEN,
+    actions: {
+
+      send({ context }, { text }) {
+        const id = context.fbid;
+        if (id) {
+          // Yay, we found our recipient!
+          FB.message(id, text, (err, data) => {
+            if (err) {
+              console.log('Oops! An error occurred while forwarding the response to', id, ':', err);
+            } else {
+              console.log('Sending:', data);
+            }
+          });
+        } else {
+          console.log('Oops! Couldn\'t find user in context:', context);
+        }
+      },
+
+      wuLocation({ context, entities }) {
+        let location = firstEntityValue(entities, 'location');
+        if (location) {
+          context.location = location;
+          delete context.missingLocation;
+        } else {
+          context.missingLocation = true;
+        }
+        return context;
+      },
+      wuForecast({ context }) {
+        if (context.location) {
+          context.forecast = 'sunny';
+          delete context.missingForecast;
+        } else {
+          context.missingForecast = true;
+        }
+        return context;
+      }
+    }
+  });
 };
 
 exports.getWit = getWit;
