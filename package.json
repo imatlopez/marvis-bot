@@ -1,28 +1,10 @@
 {
-  "name": "Wit-Facebook",
+  "name": "marvis-bot",
   "version": "1.0.0",
-  "description": "Simple Wit-Facebook",
+  "description": "Marvis, a messenger AI.",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "bot": "node bot.js",
-    "test": "jasmine-node spec"
-  },
-  "author": "",
+  "author": "Matias Lopez",
   "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.15.2",
-    "eslint": "^3.12.2",
-    "express": "^4.14.0",
-    "node-wit": "^4.2.0",
-    "node-uuid": "^1.4.7",
-    "request": "^2.79.0",
-    "request-promise": "^4.1.1",
-    "isomorphic-fetch": "^2.2.1",
-    "babel-core": "^6.21.0",
-    "babel-polyfill": "^6.20.0",
-    "bl": "^1.2.0"
-  },
   "repository": {
     "type": "git",
     "url": "https://www.github.com/imatlopez/marvis-bot"
@@ -31,7 +13,24 @@
     "url": "https://www.github.com/imatlopez/marvis-bot/issues"
   },
   "homepage": "http://www.imatlopez.com/",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "eslint": "^3.12.2",
+    "express": "^4.14.0",
+    "node-wit": "^4.2.0",
+    "node-uuid": "^1.4.7",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
+    "babel-core": "^6.21.0",
+    "babel-polyfill": "^6.20.0",
+    "bl": "^1.2.0"
+  },
   "devDependencies": {
     "jasmine-node": "^1.14.5"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "bot": "node bot.js",
+    "test": "jasmine-node spec"
   }
 }

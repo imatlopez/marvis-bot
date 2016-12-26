@@ -1,7 +1,7 @@
 'use strict';
 
 const Wit = require('node-wit').Wit;
-const FB = require('./facebook.js');
+const FBM = require('./messenger.js');
 const WU = require('./weather.js');
 const tokens = require('./token.js');
 
@@ -23,10 +23,10 @@ const getWit = () => {
     actions: {
 
       send({ context }, { text }) {
-        const id = context.fbid;
+        const id = context.psid;
         if (id) {
           // Yay, we found our recipient!
-          FB.message(id, text, (err, data) => {
+          FBM.message(id, text, (err, data) => {
             if (err) {
               console.log('Oops! An error occurred while forwarding the response to', id, ':', err);
             } else {
@@ -37,9 +37,11 @@ const getWit = () => {
           console.log('Oops! Couldn\'t find user in context:', context);
         }
       },
-      clear({ context }) {
-        const id = context.fbid;
-        return { fbid: id };
+      clear() {
+        return undefined;
+      },
+      nop({ context }) {
+        return context;
       },
 
       wuLocation({ context, entities }) {

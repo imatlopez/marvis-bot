@@ -1,13 +1,13 @@
 'use strict';
 
 const tokens = require('./token.js');
-const rp = require('request-promise');
+const request = require('request-promise');
 
 const get = (link) => {
   const wuURL = 'http://api.wunderground.com/api/' + tokens.WU_TOKEN + '/';
   const API = 'conditions';
   const fullURL = wuURL + API + link + '.json';
-  return rp({
+  return request({
     uri: fullURL,
     method: 'GET'
   }).then((response) => {
@@ -17,7 +17,7 @@ const get = (link) => {
 };
 
 const location = (query) => {
-  return rp({
+  return request({
     uri: 'http://autocomplete.wunderground.com/aq',
     method: 'GET',
     qs: {

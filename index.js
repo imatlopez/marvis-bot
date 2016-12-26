@@ -13,6 +13,7 @@ const express = require('express');
 const bot = require('./bot.js');
 const tokens = require('./token.js');
 const FB = require('./facebook.js');
+const FBM = require('./messenger.js');
 
 // Setting up our bot
 const wit = bot.getWit();
@@ -28,11 +29,11 @@ const PORT = process.env.PORT || 8445;
 // sessionId -> {fbid: facebookUserId, context: sessionState}
 const sessions = {};
 
-const getSession = (fbid) => {
+const getSession = (psid) => {
   let sessionId;
   // Let's see if we already have a session for the user id
   Object.keys(sessions).forEach((k) => {
-    if (sessions[k].fbid === fbid) {
+    if (sessions[k].psid === psid) {
       sessionId = k;
     }
   });
@@ -40,13 +41,28 @@ const getSession = (fbid) => {
   if (!sessionId) {
     sessionId = new Date().toISOString();
     sessions[sessionId] = {
-      fbid: fbid,
+      psid: psid,
       context: {
-        fbid: fbid
+        psid: psid
       }
     }; // set context, _fbid_
   }
-  return sessionId;
+  // Finding user's first name
+  FB.user(psid).then((response) => {
+    const name = response['first_name'];
+    if (name) {
+      sessions[sessionId].context.name = name;
+      delete sessions[sessionId].context.noName;
+    } else {
+      console.log('Unable to get name from response:', response);
+      sessions[sessionId].context.noName = true;
+    }
+    return sessionId;
+  }).catch((e) => {
+    console.log('Error getting name for', psid, ':', e);
+    sessions[sessionId].context.noName = true;
+    return sessionId;
+  });
 };
 
 // Starting our webserver and putting it all together
@@ -77,28 +93,32 @@ app.get('/webhook/', (req, res) => {
 // The main message handler
 app.post('/webhook/', (req, res) => {
   // Parsing the Messenger API response
-  const mail = FB.getMessage(req.body);
+  const mail = FBM.getMessage(req.body);
   if (mail && mail.message) { // Yay! We got a new message!
 
     // We retrieve the Facebook user ID of the sender and link to bot's
     // conversation history memory
     const sender = mail.sender.id;
-    const fbid = getSession(sender);
+    const psid = getSession(sender);
 
     // We retrieve the message content
     const text = mail.message.text;
     const attachments = mail.message.attachments;
 
     if (attachments) { // We received an attachment
-      FB.message(sender, 'Sorry I can only process text messages for now.');
+      FBM.message(sender, 'Sorry I can only process text messages for now.');
     } else if (text) { // We received a text message
       wit.runActions(
-        fbid,                   // the user's current session
+        psid,                   // the user's current session
         text,                   // the user's message
-        sessions[fbid].context  // the user's current session state
+        sessions[psid].context  // the user's current session state
       ).then((context) => {
         console.log('Waiting for futher messages.');
-        sessions[fbid].context = context;
+        if (context) {
+          sessions[psid].context = context;
+        } else {
+          getSession(sender);
+        }
       }).catch((error) => {
         console.log('Oops! Got an error from Wit:', error);
       });
