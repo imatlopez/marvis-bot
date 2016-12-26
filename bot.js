@@ -63,7 +63,7 @@ const getWit = () => {
       wuForecast({ context }) {
         if (context.link) {
           return WU.get(context.link).then((response) => {
-            context.forecast = response.condition;
+            context.forecast = response.weather.toLowerCase();
             delete context.missingForecast;
             return context;
           }).catch((error) => {
