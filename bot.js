@@ -45,9 +45,8 @@ const getWit = () => {
       wuLocation({ context, entities }) {
         let location = firstEntityValue(entities, 'location');
         if (location) {
-          WU.loc(location).then((response) => {
-            console.log('WU Received:', JSON.stringify(response));
-          });
+          const response = WU.loc(location);
+          console.log('WU:', response);
           context.location = location;
           delete context.missingLocation;
         } else {
