@@ -48,6 +48,7 @@ const getSession = (psid) => {
     }; // set context, _fbid_
   }
   // Finding user's first name
+  sessions[sessionId].context.noName = true;
   FB.user(psid).then((response) => {
     const name = response['first_name'];
     if (name) {
@@ -55,12 +56,10 @@ const getSession = (psid) => {
       delete sessions[sessionId].context.noName;
     } else {
       console.log('Unable to get name from response:', response);
-      sessions[sessionId].context.noName = true;
     }
     return sessionId;
   }).catch((e) => {
     console.log('Error getting name for', psid, ':', e);
-    sessions[sessionId].context.noName = true;
     return sessionId;
   });
 };

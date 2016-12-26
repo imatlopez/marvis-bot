@@ -37,7 +37,8 @@ const getWit = () => {
           console.log('Oops! Couldn\'t find user in context:', context);
         }
       },
-      clear() {
+      clear({ context }) {
+        context.clearing = true;
         return undefined;
       },
       nop({ context }) {
