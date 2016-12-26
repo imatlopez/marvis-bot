@@ -63,11 +63,13 @@ const getWit = () => {
       wuForecast({ context }) {
         if (context.link) {
           return WU.get(context.link).then((response) => {
-            if (response.weather) {
-              console.log('Forecast:', response.weather);
-              context.forecast = response.weather.toLowerCase();
+            if (response['current_observation']) {
+              console.log('Forecast:', response['current_observation'].weather);
+              console.log('Temp:', response['current_observation']['temp_f']);
+              context.forecast = response['current_observation'].weather.toLowerCase();
+              context.temp_f = response['current_observation']['temp_f'];
             } else {
-              console.log('Error: WU returned ', response);
+              console.log('Error: WU returned\n', response);
               delete context.missingForecast;
             }
             return context;
