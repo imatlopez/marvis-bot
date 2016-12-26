@@ -20,8 +20,6 @@ const location = (query) => {
   return rp({
     uri: fullURL,
     method: 'GET'
-  }).then((response) => {
-    return response;
   });
 };
 

@@ -45,14 +45,19 @@ const getWit = () => {
       wuLocation({ context, entities }) {
         let location = firstEntityValue(entities, 'location');
         if (location) {
-          const response = WU.loc(location);
-          console.log('WU:', response);
-          context.location = location;
-          delete context.missingLocation;
+          return WU.loc(location, context).then((response) => {
+            console.log('WU:', response);
+            context.location = location;
+            delete context.missingLocation;
+          }).catch((error) => {
+            console.log('Weatherunderground ecountered an error:', error);
+            context.missingLocation = true;
+            return context;
+          });
         } else {
           context.missingLocation = true;
+          return context;
         }
-        return context;
       },
       wuForecast({ context }) {
         if (context.location) {
