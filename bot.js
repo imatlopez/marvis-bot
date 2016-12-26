@@ -63,8 +63,13 @@ const getWit = () => {
       wuForecast({ context }) {
         if (context.link) {
           return WU.get(context.link).then((response) => {
-            context.forecast = response.weather.toLowerCase();
-            delete context.missingForecast;
+            if (response.weather) {
+              console.log('Forecast:', response.weather);
+              context.forecast = response.weather.toLowerCase();
+            } else {
+              console.log('Error: WU returned ', response);
+              delete context.missingForecast;
+            }
             return context;
           }).catch((error) => {
             console.log('Weatherunderground encountered an error:', error);

@@ -7,12 +7,11 @@ const get = (link) => {
   const wuURL = 'http://api.wunderground.com/api/' + tokens.WU_TOKEN + '/';
   const API = 'conditions';
   const fullURL = wuURL + API + link + '.json';
-  console.log('To WU:', fullURL);
   return rp({
     uri: fullURL,
     method: 'GET'
   }).then((response) => {
-    console.log('WU:', response);
+    console.log('GET', fullURL);
     return JSON.parse(response);
   });
 };
@@ -25,6 +24,10 @@ const location = (query) => {
       query: query
     }
   }).then((response) => {
+    console.log(
+      'GET',
+      'http://autocomplete.wunderground.com/aq?query=' + encodeURIComponent(query)
+    );
     return JSON.parse(response);
   });
 };
