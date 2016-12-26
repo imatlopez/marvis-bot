@@ -11,6 +11,7 @@ const get = (link) => {
     uri: fullURL,
     method: 'GET'
   }).then((response) => {
+    console.log('WU:', response);
     return JSON.parse(response);
   });
 };

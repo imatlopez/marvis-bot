@@ -61,7 +61,7 @@ const getWit = () => {
         }
       },
       wuForecast({ context }) {
-        if (context.location) {
+        if (context.link) {
           return WU.get(context.link).then((response) => {
             context.forecast = response.condition;
             delete context.missingForecast;
