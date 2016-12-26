@@ -12,7 +12,6 @@ const express = require('express');
 // get Bot, const, and Facebook API
 const bot = require('./bot.js');
 const tokens = require('./token.js');
-const FB = require('./facebook.js');
 const FBM = require('./messenger.js');
 
 // Setting up our bot
@@ -47,21 +46,7 @@ const getSession = (psid) => {
       }
     }; // set context, _fbid_
   }
-  // Finding user's first name
-  sessions[sessionId].context.noName = true;
-  return FB.user(psid).then((response) => {
-    const name = response['first_name'];
-    if (name) {
-      sessions[sessionId].context.name = name;
-      delete sessions[sessionId].context.noName;
-    } else {
-      console.log('Unable to get name from response:', response);
-    }
-    return sessionId;
-  }).catch((e) => {
-    console.log('Error getting name for', psid, ':', e);
-    return sessionId;
-  });
+  return sessionId;
 };
 
 // Starting our webserver and putting it all together

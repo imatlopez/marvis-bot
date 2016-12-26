@@ -1,6 +1,7 @@
 'use strict';
 
 const Wit = require('node-wit').Wit;
+const FB = require('./facebook.js');
 const FBM = require('./messenger.js');
 const WU = require('./weather.js');
 const tokens = require('./token.js');
@@ -43,6 +44,26 @@ const getWit = () => {
       },
       nop({ context }) {
         return context;
+      },
+
+      fbName({ context }) {
+        // Finding user's first name
+        return FB.user(context.psid).then((response) => {
+          const name = response['first_name'];
+          if (name) {
+            context.name = name;
+            delete context.noName;
+          } else {
+            console.log('Unable to get name from response:', response);
+            context.noName = true;
+          }
+          return context;
+        }).catch((e) => {
+          console.log('Error getting name for', context.psid, ':', e);
+          context.noName = true;
+          return context;
+        });
+
       },
 
       wuLocation({ context, entities }) {
