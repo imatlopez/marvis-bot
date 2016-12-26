@@ -59,7 +59,7 @@ const getSession = (psid) => {
     }
     return sessionId;
   }).catch((e) => {
-    console.log('Error getting name for', sessionId, ':', e);
+    console.log('Error getting name for', psid, ':', e);
     return sessionId;
   });
 };
