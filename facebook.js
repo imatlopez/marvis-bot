@@ -14,7 +14,7 @@ const getUserInfo = (psid) => {
       access_token: tokens.FB_PAGE_TOKEN
     }
   }).then((response) => {
-    console.log('GET', 'https://graph.facebook.com/v2.8/' + psid + '?access_token=PAGE_ACCESS_TOKEN');
+    console.log('GET', 'https://graph.facebook.com/v2.8/' + psid + '?access_token=FB_PAGE_TOKEN');
     return JSON.parse(response);
   });
 };

@@ -49,7 +49,7 @@ const getSession = (psid) => {
   }
   // Finding user's first name
   sessions[sessionId].context.noName = true;
-  return FB.user(sessionId).then((response) => {
+  return FB.user(psid).then((response) => {
     const name = response['first_name'];
     if (name) {
       sessions[sessionId].context.name = name;
