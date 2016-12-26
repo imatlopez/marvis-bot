@@ -49,7 +49,7 @@ const getSession = (psid) => {
   }
   // Finding user's first name
   sessions[sessionId].context.noName = true;
-  FB.user(psid).then((response) => {
+  return FB.user(sessionId).then((response) => {
     const name = response['first_name'];
     if (name) {
       sessions[sessionId].context.name = name;
@@ -59,7 +59,7 @@ const getSession = (psid) => {
     }
     return sessionId;
   }).catch((e) => {
-    console.log('Error getting name for', psid, ':', e);
+    console.log('Error getting name for', sessionId, ':', e);
     return sessionId;
   });
 };

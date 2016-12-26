@@ -3,9 +3,9 @@
 const request = require('request-promise');
 const tokens = require('./token.js');
 
-const getUser = (context) => {
+const getUserInfo = (psid) => {
   return request({
-    uri: 'https://graph.facebook.com/v2.8/' + context.psid,
+    uri: 'https://graph.facebook.com/v2.8/' + psid,
     method: 'GET',
     json: true, headers: {
       'Content-Type': 'application/json'
@@ -14,11 +14,11 @@ const getUser = (context) => {
       access_token: tokens.FB_PAGE_TOKEN
     }
   }).then((response) => {
-    console.log('GET', 'https://graph.facebook.com/v2.8/' + context.psid + '?access_token=PAGE_ACCESS_TOKEN');
+    console.log('GET', 'https://graph.facebook.com/v2.8/' + psid + '?access_token=PAGE_ACCESS_TOKEN');
     return JSON.parse(response);
   });
 };
 
 module.exports = {
-  user: getUser
+  user: getUserInfo
 };
