@@ -51,7 +51,7 @@ const getWit = () => {
             delete context.missingLocation;
             return context;
           }).catch((error) => {
-            console.log('Weatherunderground ecountered an error:', error);
+            console.log('Weatherunderground encountered an error:', error);
             context.missingLocation = true;
             return context;
           });
