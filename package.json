@@ -6,14 +6,10 @@
   "scripts": {
     "start": "node index.js",
     "bot": "node bot.js",
-    "test": "jest"
+    "test": "jasmine-node spec"
   },
   "author": "",
   "license": "MIT",
-  "jest": {
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "unmockedModulePathPatterns": ["core-js/.*"]
-  },
   "dependencies": {
     "body-parser": "^1.15.2",
     "eslint": "^3.12.2",
@@ -24,9 +20,7 @@
     "request-promise": "^4.1.1",
     "isomorphic-fetch": "^2.2.1",
     "babel-core": "^6.21.0",
-    "babel-jest": "^17.0.2",
     "babel-polyfill": "^6.20.0",
-    "jest-cli": "^18.0.0",
     "bl": "^1.2.0"
   },
   "repository": {
@@ -36,5 +30,8 @@
   "bugs": {
     "url": "https://www.github.com/imatlopez/marvis-bot/issues"
   },
-  "homepage": "http://www.imatlopez.com/"
+  "homepage": "http://www.imatlopez.com/",
+  "devDependencies": {
+    "jasmine-node": "^1.14.5"
+  }
 }
