@@ -37,7 +37,7 @@ const getWit = () => {
           console.log('Oops! Couldn\'t find user in context:', context);
         }
       },
-      done({ context }) {
+      clear({ context }) {
         const id = context.fbid;
         return { fbid: id };
       },
