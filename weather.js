@@ -14,13 +14,12 @@ const get = (location) => {
 };
 
 const location = (query) => {
-  const acURL = 'http://autocomplete.wunderground.com/aq';
-  const qs = '?=query' + query;
-  const fullURL = acURL + qs;
-  console.log('Debug the URL:', fullURL);
   return rp({
-    uri: fullURL,
-    method: 'GET'
+    uri: 'http://autocomplete.wunderground.com/aq',
+    method: 'GET',
+    qs: {
+      query: query
+    }
   });
 };
 

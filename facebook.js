@@ -6,7 +6,7 @@ const request = require('request');
 const tokens = require('./token.js');
 
 const out = request.defaults({
-  uri: 'https://graph.facebook.com/v2.6/me/messages',
+  uri: 'https://graph.facebook.com/v2.8/me/messages',
   method: 'POST',
   json: true, headers: {
     'Content-Type': 'application/json'
