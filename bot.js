@@ -37,6 +37,10 @@ const getWit = () => {
           console.log('Oops! Couldn\'t find user in context:', context);
         }
       },
+      done({ context }) {
+        const id = context.fbid;
+        return { fbid: id };
+      },
 
       wuLocation({ context, entities }) {
         let location = firstEntityValue(entities, 'location');
