@@ -20,7 +20,7 @@ if (!WU_TOKEN) {
   throw new Error('missing WU_TOKEN');
 }
 
-// Weather Underground API
+// Google Maps API
 const GMAPS_TOKEN = process.env.GMAPS_TOKEN;
 if (!GMAPS_TOKEN) {
   throw new Error('missing GMAPS_TOKEN');
