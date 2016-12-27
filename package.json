@@ -23,6 +23,7 @@
     "request-promise": "^4.1.1",
     "babel-core": "^6.21.0",
     "babel-polyfill": "^6.20.0",
+    "babel-preset-es2015": "^6.18.0",
     "bl": "^1.2.0"
   },
   "devDependencies": {
@@ -30,9 +31,12 @@
     "chai-http": "^3.0.0",
     "mocha": "^3.2.0"
   },
+  "babel": {
+    "presets": ["es2015"]
+  },
   "scripts": {
     "start": "node index.js",
     "bot": "node bot.js",
-    "test": "mocha"
+    "test": "mocha --compilers js:babel-core/register"
   }
 }
