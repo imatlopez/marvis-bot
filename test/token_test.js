@@ -1,4 +1,4 @@
-var assert = require('chai').assert;
+const assert = require('chai').assert;
 
 // Enable Variables
 process.env.NODE_ENV = 'development';
@@ -9,7 +9,7 @@ process.env.WU_TOKEN = 'fakewutoken';
 process.env.GMAPS_TOKEN = 'fakegmapstoken';
 
 // Include required files
-var tokens = require('../token.js');
+const tokens = require('../token.js');
 
 describe('token.js', () => {
   it('WIT_TOKEN value', () => {

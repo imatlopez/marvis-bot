@@ -1,4 +1,4 @@
-var assert = require('chai').assert;
+const assert = require('chai').assert;
 
 // Enable Variables
 process.env.NODE_ENV = 'development';
@@ -9,12 +9,12 @@ process.env.WU_TOKEN = 'fakewutoken';
 process.env.GMAPS_TOKEN = 'fakegmapstoken';
 
 // Include required files
-var FBM = require('../messenger.js');
+const FBM = require('../messenger.js');
 
 describe('messenger.js', () => {
 
   it('message()', () => {
-    var ret = FBM.message('sung', 'hello');
+    const ret = FBM.message('sung', 'hello');
     assert.notEqual(
       ret,
       undefined,
@@ -32,7 +32,7 @@ describe('messenger.js', () => {
       payload = JSON.parse(data);
       assert(payload !== null);
 
-      var ret = FBM.getMessage(payload);
+      const ret = FBM.getMessage(payload);
       assert.equal(
         ret.message.text,
         'in London?',

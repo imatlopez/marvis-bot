@@ -163,7 +163,6 @@
         "space-unary-ops": 2,
 
         // es6
-        "no-var": 1,
         "arrow-parens": 2,
         "arrow-spacing": 2,
         "constructor-super": 2,
