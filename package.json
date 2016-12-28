@@ -43,6 +43,6 @@
   "scripts": {
     "start": "node index.js",
     "bot": "node bot.js",
-    "test": "babel-istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | codacy-coverage && rm -rf ./coverage"
+    "test": "babel-istanbul cover -x '**/test/**' _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | codacy-coverage && rm -rf ./coverage"
   }
 }
