@@ -42,6 +42,13 @@ const clear = (context) => {
 const nop = (context) => {
   return context;
 };
+const merge = (context, entities) => {
+  const feeling = firstEntityValue(entities, 'feeling');
+  if (feeling) {
+    context.feeling = feeling;
+  }
+  return feeling;
+};
 
 /*
   Facebook Actions
@@ -117,6 +124,7 @@ const getWit = () => {
       send:   ({ context }, { text }) => send(context, text),
       clear:  ({ context })           => clear(context),
       nop:    ({ context })           => nop(context),
+      merge:  ({ context, entities }) => merge(context, entities),
       // facebook
       fbName: ({ context }) => fbName(context),
       // weather underground
@@ -135,6 +143,7 @@ if (process.env.NODE_ENV !== 'development') {
     send: send,
     clear: clear,
     nop: nop,
+    merge: merge,
     fbName: fbName,
     wuLocation: wuLocation,
     wuForecast: wuForecast

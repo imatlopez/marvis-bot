@@ -8,5 +8,9 @@
   "intent" : [ {
     "confidence" : 0.9996615318763402,
     "value" : "weather"
+  } ],
+  "feeling" : [ {
+    "confidence" : 0.9994318318773452,
+    "value" : "love"
   } ]
 }

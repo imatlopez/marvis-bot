@@ -48,6 +48,20 @@ describe('bot.js', () => {
     );
   });
 
+  it('merge()', () => {
+    require('fs').readFile('./test/files/ent.json', 'utf8', (err, data) => {
+      if (err) {
+        throw err; // we'll not consider error handling for now
+      }
+      assert.eventually.propertyVal(
+        bot.merge({ psid:0 }, JSON.parse(data)),
+        'feeling',
+        'love',
+        'should obtain feeling'
+      );
+    });
+  });
+
   it('fbName()', () => {
     assert.eventually.propertyVal(
       bot.fbName({ psid:0 }),
