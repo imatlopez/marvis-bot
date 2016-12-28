@@ -54,7 +54,6 @@ const app = express();
 app.set('port', PORT);
 app.listen(app.get('port'));
 app.use(bodyParser.json());
-console.log('I\'m wating for you @' + PORT);
 
 // index. Let's say something fun
 app.get('/', (req, res) => {
@@ -110,3 +109,7 @@ app.post('/webhook/', (req, res) => {
   }
   res.sendStatus(200);
 });
+
+if (process.env.NODE_ENV === 'development') {
+  exports.session = getSession;
+}
