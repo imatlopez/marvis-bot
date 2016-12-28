@@ -28,6 +28,7 @@
   "devDependencies": {
     "babel-istanbul": "^0.12.1",
     "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "chai-http": "^3.0.0",
     "codacy-coverage": "^2.0.0",
     "eslint": "^3.12.2",

@@ -1,0 +1,12 @@
+{
+  "location" : [ {
+    "confidence" : 0.9995131461621358,
+    "type" : "value",
+    "value" : "San Francisco",
+    "suggested" : true
+  } ],
+  "intent" : [ {
+    "confidence" : 0.9996615318763402,
+    "value" : "weather"
+  } ]
+}

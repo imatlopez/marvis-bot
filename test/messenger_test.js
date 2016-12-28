@@ -1,14 +1,5 @@
+require('./files/env.js').dev();
 const assert = require('chai').assert;
-
-// Enable Variables
-process.env.NODE_ENV = 'development';
-process.env.WIT_TOKEN = 'fakewittoken';
-process.env.FB_PAGE_TOKEN = 'fakefbpagetoken';
-process.env.FB_VERIFY_TOKEN = 'fakefbverifytoken';
-process.env.WU_TOKEN = 'fakewutoken';
-process.env.GMAPS_TOKEN = 'fakegmapstoken';
-
-// Include required files
 const FBM = require('../messenger.js');
 
 describe('messenger.js', () => {
@@ -23,15 +14,12 @@ describe('messenger.js', () => {
   });
 
   it('getMessage()', () => {
-    var payload = null;
-    require('fs').readFile('./msg.json', 'utf8', (err, data) => {
+    require('fs').readFile('./test/files/msg.json', 'utf8', (err, data) => {
       if (err) {
         throw err; // we'll not consider error handling for now
       }
 
-      payload = JSON.parse(data);
-      assert(payload !== null);
-
+      const payload = JSON.parse(data);
       const ret = FBM.getMessage(payload);
       assert.equal(
         ret.message.text,
