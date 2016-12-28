@@ -47,7 +47,7 @@ const merge = (context, entities) => {
   if (feeling) {
     context.feeling = feeling;
   }
-  return feeling;
+  return context;
 };
 
 /*

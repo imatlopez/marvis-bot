@@ -1,5 +1,6 @@
 require('./files/env.js').dev();
 const assert = require('chai').use(require('chai-as-promised')).assert;
+const json = (file) => JSON.parse(require('fs').readFileSync(file));
 const bot = require('../bot.js');
 
 describe('bot.js', () => {
@@ -12,17 +13,11 @@ describe('bot.js', () => {
   });
 
   it('firstEntityValue()', () => {
-    require('fs').readFile('./test/files/ent.json', 'utf8', (err, data) => {
-      if (err) {
-        throw err; // we'll not consider error handling for now
-      }
-      assert.equal(
-        bot.entity(JSON.parse(data), 'location'),
-        'San Francisco',
-        'return the correct value'
-      );
-    });
-
+    assert.equal(
+      bot.entity(json('test/files/ent.json'), 'location'),
+      'San Francisco',
+      'return the correct value'
+    );
   });
 
   it('send()', () => {
@@ -49,17 +44,12 @@ describe('bot.js', () => {
   });
 
   it('merge()', () => {
-    require('fs').readFile('./test/files/ent.json', 'utf8', (err, data) => {
-      if (err) {
-        throw err; // we'll not consider error handling for now
-      }
-      assert.eventually.propertyVal(
-        bot.merge({ psid:0 }, JSON.parse(data)),
-        'feeling',
-        'love',
-        'should obtain feeling'
-      );
-    });
+    assert.propertyVal(
+      bot.merge({ psid:0 }, json('test/files/ent.json')),
+      'feeling',
+      'love',
+      'should obtain feeling'
+    );
   });
 
   it('fbName()', () => {
@@ -72,16 +62,11 @@ describe('bot.js', () => {
   });
 
   it('wuLocation()', () => {
-    require('fs').readFile('./test/files/ent.json', 'utf8', (err, data) => {
-      if (err) {
-        throw err; // we'll not consider error handling for now
-      }
-      assert.eventually.property(
-        bot.wuLocation({ psid:0 }, JSON.parse(data)),
-        'link',
-        'should find link to place'
-      );
-    });
+    assert.eventually.property(
+      bot.wuLocation({ psid:0 }, json('test/files/ent.json')),
+      'link',
+      'should find link to place'
+    );
   });
 
   it('wuForecast()', () => {

@@ -2,7 +2,6 @@
 const dev = () => {
   try {
     require('./home.js').dev();
-    console.log('Local API keys found, using those instead.');
   } catch (e) {
     if (!process.env.NODE_ENV) {
       process.env.NODE_ENV = 'development';

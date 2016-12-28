@@ -1,5 +1,6 @@
 require('./files/env.js').dev();
 const assert = require('chai').assert;
+const json = (file) => JSON.parse(require('fs').readFileSync(file));
 const FBM = require('../messenger.js');
 
 describe('messenger.js', () => {
@@ -14,19 +15,11 @@ describe('messenger.js', () => {
   });
 
   it('getMessage()', () => {
-    require('fs').readFile('./test/files/msg.json', 'utf8', (err, data) => {
-      if (err) {
-        throw err; // we'll not consider error handling for now
-      }
-
-      const payload = JSON.parse(data);
-      const ret = FBM.getMessage(payload);
-      assert.equal(
-        ret.message.text,
-        'in London?',
-        'correctly parsed message'
-      );
-    });
+    assert.equal(
+      FBM.getMessage(json('test/files/msg.json')).message.text,
+      'in London?',
+      'correctly parsed message'
+    );
   });
 
 });
