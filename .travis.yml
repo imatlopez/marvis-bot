@@ -3,3 +3,7 @@ cache: yarn
 node_js:
   - "stable"
   - "6"
+os:
+  - osx
+after_success:
+  - coveralls

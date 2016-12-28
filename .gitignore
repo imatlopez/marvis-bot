@@ -1,4 +1,4 @@
 node_modules/*
 /coverage
 /tools
-/test/files/home.js
+/spec/files/home.js

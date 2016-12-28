@@ -6,47 +6,64 @@ const FBM = require('./messenger.js');
 const WU = require('./weather.js');
 const tokens = require('./token.js');
 
+/**
+ * Obtain entity value from entities object
+ * @param {Object} entities
+ * @param {String} entity
+ * @return {String}
+ */
 const firstEntityValue = (entities, entity) => {
-  const val = entities && entities[entity] &&
-    Array.isArray(entities[entity]) &&
-    entities[entity].length > 0 &&
-    entities[entity][0].value;
-  if (!val) {
-    return null;
-  }
+
+  let val = entities && entities[entity];
+  val = val && Array.isArray(entities[entity]);
+  val = val && entities[entity].length > 0;
+  val = val && entities[entity][0].value;
+
+  if (!val) { return null; }
   return typeof val === 'object' ? val.value : val;
 };
 
-/*
-  Overhead Actions
-*/
+/**
+ * Send message through messenger API
+ * @param {Object} context
+ * @param {String} text
+ */
 const send = (context, text) => {
   const id = context.psid;
   if (id) {
     // Yay, we found our recipient!
-    FBM.message(id, text, (err, data) => {
-      if (err) {
-        console.log('Oops! An error occurred while forwarding the response to', id, ':', err);
-      } else {
-        console.log('Sending:', data);
-      }
+    FBM.message(id, text).catch((error) => {
+      console.warn('Messenger Error @' + id, ':\n', error);
     });
-  } else {
-    console.log('Oops! Couldn\'t find user in context:', context);
+    return;
   }
+  throw new Error('Couldn\'t find user in context:', context);
 };
+
+/**
+ * Clears context of all acquired information
+ * @param {Object} context
+ * @return {Object}
+ */
 const clear = (context) => {
-  context.clearing = true;
-  return null;
-};
-const nop = (context) => {
+  for (let property in context) {
+    if (context.hasOwnProperty(property)) {
+      if (property !== 'psid') { delete context[property]; }
+    }
+  }
   return context;
 };
+
+/**
+ * No action, empty instruction
+ * @param {Object} context
+ * @return {Object}
+ */
+const nop = (context) => context;
+
 const merge = (context, entities) => {
   const feeling = firstEntityValue(entities, 'feeling');
-  if (feeling) {
-    context.feeling = feeling;
-  }
+  if (feeling) { context.feeling = feeling; }
   return context;
 };
 
@@ -72,9 +89,11 @@ const fbName = (context) => {
   });
 };
 
-/*
-  Weather Underground Actions
-*/
+/**
+ * Valid location from query and link
+ * @param {Object} context
+ * @return {Promise}
+ */
 const wuLocation = (context, entities) => {
   let location = firstEntityValue(entities, 'location');
   if (location) {
@@ -84,7 +103,7 @@ const wuLocation = (context, entities) => {
       delete context.missingLocation;
       return context;
     }).catch((error) => {
-      console.log('Weatherunderground encountered an error:', error);
+      console.warn('WU API Error:\n', error);
       context.missingLocation = true;
       return context;
     });
@@ -93,21 +112,25 @@ const wuLocation = (context, entities) => {
     return context;
   }
 };
+
+/**
+ * Temperature and climate at a location
+ * @param {Object} context
+ * @return {Promise}
+ */
 const wuForecast = (context) => {
   if (context.link) {
     return WU.get(context.link).then((response) => {
       if (response['current_observation']) {
-        console.log('Forecast:', response['current_observation'].weather);
-        console.log('Temp:', response['current_observation']['temp_f']);
         context.forecast = response['current_observation'].weather.toLowerCase();
         context.temp_f = response['current_observation']['temp_f'];
       } else {
-        console.log('Error: WU returned\n', response);
+        console.warn('WU Response Error:\n', response);
         delete context.missingForecast;
       }
       return context;
     }).catch((error) => {
-      console.log('Weatherunderground encountered an error:', error);
+      console.warn('WU API Error:\n', error);
       context.missingForecast = true;
       return context;
     });
@@ -117,6 +140,10 @@ const wuForecast = (context) => {
   }
 };
 
+/**
+ * Interface to Wit.ai API
+ * @return {Object} Wit.ai
+ */
 const getWit = () => {
   return new Wit({
     accessToken: tokens.WIT_TOKEN,
@@ -134,18 +161,14 @@ const getWit = () => {
   });
 };
 
-if (process.env.NODE_ENV !== 'development') {
-  exports.getWit = getWit;
-} else {
-  module.exports = {
-    getWit: getWit,
-    entity: firstEntityValue,
-    send: send,
-    clear: clear,
-    nop: nop,
-    merge: merge,
-    fbName: fbName,
-    wuLocation: wuLocation,
-    wuForecast: wuForecast
-  };
-}
+module.exports = {
+  getWit: getWit,
+  entity: firstEntityValue,
+  send: send,
+  clear: clear,
+  nop: nop,
+  merge: merge,
+  fbName: fbName,
+  wuLocation: wuLocation,
+  wuForecast: wuForecast
+};

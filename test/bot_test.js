@@ -12,12 +12,21 @@ describe('bot.js', () => {
     );
   });
 
-  it('firstEntityValue()', () => {
-    assert.equal(
-      bot.entity(json('test/files/ent.json'), 'location'),
-      'San Francisco',
-      'return the correct value'
-    );
+  describe('firstEntityValue()', () => {
+    it('find valid value', () => {
+      assert.equal(
+        bot.entity(json('test/files/ent.json'), 'location'),
+        'San Francisco',
+        'return the correct value'
+      );
+    });
+
+    it('pass invalid null', () => {
+      assert.isNull(
+        bot.entity(json('test/files/ent.json'), 'patience'),
+        'return null'
+      );
+    });
   });
 
   it('send()', () => {
@@ -28,11 +37,27 @@ describe('bot.js', () => {
     );
   });
 
-  it('clear()', () => {
-    assert.isNull(
-      bot.clear({ value:123 }),
-      'should return null'
-    );
+  describe('clear()', () => {
+
+    it('returns argument', () => {
+      const testObj = { psid: 'abc', value:123 };
+      assert.equal(
+        bot.clear(testObj),
+        testObj,
+        'should return input'
+      );
+    });
+
+    it('keeps ID', () => {
+      const testObj = { psid: 'abc', value:123 };
+      assert.propertyVal(
+        bot.clear(testObj),
+        'psid',
+        'abc',
+        'should keep some properties'
+      );
+    });
+
   });
 
   it('nop()', () => {
