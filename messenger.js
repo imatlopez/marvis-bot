@@ -3,9 +3,13 @@
 const request = require('request-promise');
 const tokens = require('./token.js');
 
-// See the Send API reference
-// https://developers.facebook.com/docs/messenger-platform/send-api-reference
-const message = (recipientId, msg) => {
+/**
+ * Send message through messenger API
+ * @param {String} recipientId
+ * @param {String} msg
+ * @return {Promise}
+ */
+const postMessage = (recipientId, msg) => {
   return request({
     uri: 'https://graph.facebook.com/v2.8/me/messages',
     method: 'POST',
@@ -23,13 +27,14 @@ const message = (recipientId, msg) => {
         text: msg
       }
     }
-  }).catch((e) => {
-    console.log('Could not send message (', msg, '):', e);
-  });
+  }).catch((e) => { throw e; });
 };
 
-// See the Webhook reference
-// https://developers.facebook.com/docs/messenger-platform/webhook-reference
+/**
+ * Parse nessenger data
+ * @param {Object} body
+ * @return {String}
+ */
 const getMessage = (body) => {
   const val = body.object === 'page' &&
     body.entry &&
@@ -44,8 +49,26 @@ const getMessage = (body) => {
   return val || null;
 };
 
+/**
+ * Send message through messenger API
+ * @param {Object} context
+ * @param {String} text
+ */
+const send = (context, text) => {
+  const id = context.psid;
+  if (id) {
+    postMessage(id, text).catch((error) => {
+      console.warn('Messenger Error @' + id, ':\n', error);
+    });
+    return 0;
+  }
+  console.warn('Couldn\'t find user in context:', context);
+  return 1;
+};
+
 
 module.exports = {
   getMessage: getMessage,
-  message: message
+  postMessage: postMessage,
+  send: send
 };

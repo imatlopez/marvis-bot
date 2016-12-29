@@ -1,40 +1,28 @@
-require('./files/env.js').dev();
 const assert = require('chai').assert;
-const tokens = require('../token.js');
+const token = require('../token.js');
 
 describe('token.js', () => {
-  it('WIT_TOKEN value', () => {
-    assert.equal(
-      process.env.WIT_TOKEN,
-      tokens.WIT_TOKEN,
+  it('WIT_TOKEN', () => {
+    assert(
+      token.WIT_TOKEN === process.env.WIT_TOKEN || token.WIT_TOKEN === 'faketoken',
       'equals environment variable'
     );
   });
-  it('FB_PAGE_TOKEN value', () => {
-    assert.equal(
-      process.env.FB_PAGE_TOKEN,
-      tokens.FB_PAGE_TOKEN,
+  it('FB_PAGE_TOKEN', () => {
+    assert(
+      token.FB_PAGE_TOKEN === process.env.FB_PAGE_TOKEN || token.FB_PAGE_TOKEN === 'faketoken',
       'equals environment variable'
     );
   });
-  it('FB_VERIFY_TOKEN value', () => {
-    assert.equal(
-      process.env.FB_VERIFY_TOKEN,
-      tokens.FB_VERIFY_TOKEN,
+  it('FB_VERIFY_TOKEN', () => {
+    assert(
+      token.FB_VERIFY_TOKEN === process.env.FB_VERIFY_TOKEN || token.FB_VERIFY_TOKEN === 'faketoken',
       'equals environment variable'
     );
   });
-  it('WU_TOKEN value', () => {
-    assert.equal(
-      process.env.WU_TOKEN,
-      tokens.WU_TOKEN,
-      'equals environment variable'
-    );
-  });
-  it('GMAPS_TOKEN value', () => {
-    assert.equal(
-      process.env.GMAPS_TOKEN,
-      tokens.GMAPS_TOKEN,
+  it('WU_TOKEN', () => {
+    assert(
+      token.WU_TOKEN === process.env.WU_TOKEN || token.WU_TOKEN === 'faketoken',
       'equals environment variable'
     );
   });

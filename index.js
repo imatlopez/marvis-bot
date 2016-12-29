@@ -110,6 +110,4 @@ app.post('/webhook/', (req, res) => {
   res.sendStatus(200);
 });
 
-if (process.env.NODE_ENV === 'development') {
-  exports.session = getSession;
-}
+exports.session = getSession;

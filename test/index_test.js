@@ -1,4 +1,3 @@
-require('./files/env.js').dev();
 const assert = require('chai').use(require('chai-as-promised')).assert;
 const app = require('../index.js');
 

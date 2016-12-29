@@ -13,7 +13,9 @@
     },
     "globals": {
       "describe",
-      "it"
+      "it",
+      "beforeEach",
+      "afterEach"
     },
     "rules": {
       // Possible Errors
