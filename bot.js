@@ -30,9 +30,7 @@ const firstEntityValue = (entities, entity) => {
  */
 const clear = (context) => {
   for (let property in context) {
-    if (context.hasOwnProperty(property)) {
-      if (property !== 'psid') { delete context[property]; }
-    }
+    if (property !== 'psid') { delete context[property]; }
   }
   return context;
 };
@@ -50,6 +48,19 @@ const merge = (context, entities) => {
   return context;
 };
 
+const actions = {
+  clear:  ({ context })           => clear(context),
+  nop:    ({ context })           => nop(context),
+  merge:  ({ context, entities }) => merge(context, entities),
+  // messenger
+  send: ({ context }, { text }) => FBM.send(context, text),
+  // facebook
+  fbName: ({ context }) => FB.name(context),
+  // weather underground
+  wuLocation: ({ context, entities }) => WU.location(context, entities),
+  wuForecast: ({ context })           => WU.forecast(context)
+};
+
 /**
  * Interface to Wit.ai API
  * @return {Object} Wit.ai
@@ -57,25 +68,12 @@ const merge = (context, entities) => {
 const getWit = () => {
   return new Wit({
     accessToken: tokens.WIT_TOKEN,
-    actions: {
-      clear:  ({ context })           => clear(context),
-      nop:    ({ context })           => nop(context),
-      merge:  ({ context, entities }) => merge(context, entities),
-      // messenger
-      send: ({ context }, { text }) => FBM.send(context, text),
-      // facebook
-      fbName: ({ context }) => FB.name(context),
-      // weather underground
-      wuLocation: ({ context, entities }) => WU.location(context, entities),
-      wuForecast: ({ context })           => WU.forecast(context)
-    }
+    actions: actions
   });
 };
 
 module.exports = {
   getWit: getWit,
   entity: firstEntityValue,
-  clear: clear,
-  nop: nop,
-  merge: merge
+  actions: actions
 };

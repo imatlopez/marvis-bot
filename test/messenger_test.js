@@ -2,6 +2,7 @@ require('chai').use(require('chai-as-promised')).should();
 const assert = require('chai').use(require('chai-as-promised')).assert;
 const json = (file) => JSON.parse(require('fs').readFileSync(file));
 const FBM = require('../messenger.js');
+const bot = require('../bot.js');
 const nock = require('nock');
 
 describe('messenger.js', () => {
@@ -35,10 +36,10 @@ describe('messenger.js', () => {
 
   describe('send()', () => {
     it('true result', () => {
-      return FBM.send({ psid:'ralph' }, 'me').should.equal(0);
+      return bot.actions.send({ context:{ psid:'ralph' } }, { text:'me' }).should.equal(0);
     });
     it('false result', () => {
-      return FBM.send({ psix:'ralph' }, 'me').should.equal(1);
+      return bot.actions.send({ context:{ psix:'ralph' } }, { text:'me' }).should.equal(1);
     });
   });
 

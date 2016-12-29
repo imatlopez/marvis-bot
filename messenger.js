@@ -58,7 +58,7 @@ const send = (context, text) => {
   const id = context.psid;
   if (id) {
     postMessage(id, text).catch((error) => {
-      console.warn('Messenger Error @' + id, ':\n', error);
+      console.warn('Messenger Error @' + id, ':', error.message);
     });
     return 0;
   }

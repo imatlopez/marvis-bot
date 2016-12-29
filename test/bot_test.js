@@ -1,5 +1,5 @@
+require('chai').use(require('chai-as-promised')).should();
 const assert = require('chai').use(require('chai-as-promised')).assert;
-const json = (file) => JSON.parse(require('fs').readFileSync(file));
 const bot = require('../bot.js');
 
 describe('bot.js', () => {
@@ -36,41 +36,39 @@ describe('bot.js', () => {
   describe('clear()', () => {
 
     it('returns argument', () => {
-      const testObj = { psid: 'abc', value:123 };
-      assert.equal(
-        bot.clear(testObj),
-        testObj,
-        'should return input'
-      );
+      const testObj = { psid: 'abc' };
+      return bot.actions.clear({ context:testObj }).should.deep.equal(testObj);
     });
 
-    it('keeps ID', () => {
-      const testObj = { psid: 'abc', value:123 };
-      assert.propertyVal(
-        bot.clear(testObj),
-        'psid',
-        'abc',
-        'should keep some properties'
-      );
+    it('returns delete unnecessary properties', () => {
+      const testObj = { psid: 'abc', del: 'bye' };
+      return bot.actions.clear({ context:testObj }).should.not.have.property('del');
     });
 
   });
 
   it('nop()', () => {
-    assert.equal(
-      bot.nop(123),
-      123,
-      'should return the value given'
-    );
+    const testObj = { value:123 };
+    return bot.actions.nop({ context:testObj }).should.equal(testObj);
   });
 
-  it('merge()', () => {
-    assert.propertyVal(
-      bot.merge({ psid:0 }, json('test/files/ent.json')),
-      'feeling',
-      'love',
-      'should obtain feeling'
-    );
+  describe('merge()', () => {
+    it('returns context', () => {
+      return bot.actions.merge({
+        context: { psid:0 },
+        entities: undefined
+      }).should.have.property('psid', 0);
+    });
+    it('feeling', () => {
+      return bot.actions.merge({
+        context: { psid:0 },
+        entities: {
+          feeling: [{
+            value: 'love'
+          }]
+        }
+      }).should.have.property('feeling', 'love');
+    });
   });
 
 });

@@ -1,5 +1,6 @@
 require('chai').use(require('chai-as-promised')).should();
 const WU = require('../weather.js');
+const bot = require('../bot.js');
 const nock = require('nock');
 
 describe('weather.js', () => {
@@ -33,13 +34,13 @@ describe('weather.js', () => {
           temp_f: 50
         }
       });
-      return WU.forecast({ link:'#' }).should.eventually.have.property(
+      return bot.actions.wuForecast({ context:{ link:'#' } }).should.eventually.have.property(
         'forecast', 'sunny'
       );
     });
     it('error result', () => {
       nock(/wunderground\.com/).get(/.*/).reply(404);
-      return WU.forecast({ link:'#' }).should.eventually.have.property(
+      return bot.actions.wuForecast({ context:{ link:'#' } }).should.eventually.have.property(
         'missingForecast'
       );
     });
@@ -59,13 +60,13 @@ describe('weather.js', () => {
             name: 'nowhere'
           }
         ] });
-      return WU.location({ psid:'#' }, ent).should.eventually.have.property(
+      return bot.actions.wuLocation({ context:{ psid:'#' }, entities:ent }).should.eventually.have.property(
         'link', '/q/'
       );
     });
     it('error result', () => {
       nock(/wunderground\.com/).get(/.*/).reply(404);
-      return WU.location({ link:'#' }, ent).should.eventually.have.property(
+      return bot.actions.wuLocation({ context:{ link:'#' }, entities:ent }).should.eventually.have.property(
         'missingLocation'
       );
     });

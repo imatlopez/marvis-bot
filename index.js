@@ -52,8 +52,8 @@ const getSession = (psid) => {
 // Starting our webserver and putting it all together
 const app = express();
 app.set('port', PORT);
-app.listen(app.get('port'));
 app.use(bodyParser.json());
+const server = app.listen(app.get('port'));
 
 // index. Let's say something fun
 app.get('/', (req, res) => {
@@ -62,9 +62,6 @@ app.get('/', (req, res) => {
 
 // Webhook verify setup using FB_VERIFY_TOKEN
 app.get('/webhook/', (req, res) => {
-  if (!tokens.FB_VERIFY_TOKEN) {
-    throw new Error('missing FB_VERIFY_TOKEN');
-  }
   if (req.query['hub.mode'] === 'subscribe' &&
     req.query['hub.verify_token'] === tokens.FB_VERIFY_TOKEN) {
     res.send(req.query['hub.challenge']);
@@ -75,21 +72,17 @@ app.get('/webhook/', (req, res) => {
 
 // The main message handler
 app.post('/webhook/', (req, res) => {
-  // Parsing the Messenger API response
   const mail = FBM.getMessage(req.body);
   if (mail && mail.message) { // Yay! We got a new message!
 
-    // We retrieve the Facebook user ID of the sender and link to bot's
-    // conversation history memory
     const sender = mail.sender.id;
     const psid = getSession(sender);
 
-    // We retrieve the message content
     const text = mail.message.text;
     const attachments = mail.message.attachments;
 
     if (attachments) { // We received an attachment
-      FBM.message(sender, 'Sorry I can only process text messages for now.');
+      FBM.send(sender, 'Sorry I can only process text messages for now.');
     } else if (text) { // We received a text message
       wit.runActions(
         psid,                   // the user's current session
@@ -97,11 +90,7 @@ app.post('/webhook/', (req, res) => {
         sessions[psid].context  // the user's current session state
       ).then((context) => {
         console.log('Waiting for futher messages.');
-        if (context) {
-          sessions[psid].context = context;
-        } else {
-          getSession(sender);
-        }
+        sessions[psid].context = context;
       }).catch((error) => {
         console.log('Oops! Got an error from Wit:', error);
       });
@@ -110,4 +99,7 @@ app.post('/webhook/', (req, res) => {
   res.sendStatus(200);
 });
 
-exports.session = getSession;
+module.exports = {
+  session: getSession,
+  server: server
+};

@@ -1,5 +1,6 @@
 require('chai').use(require('chai-as-promised')).should();
 const FB = require('../facebook.js');
+const bot = require('../bot.js');
 const nock = require('nock');
 
 describe('facebook.js', () => {
@@ -16,19 +17,19 @@ describe('facebook.js', () => {
   describe('getFirstName()', () => {
     it('true result', () => {
       nock(/facebook\.com/).get(/.*/).reply(200, { first_name: 'abe' });
-      return FB.name({ psid:'#' }).should.eventually.have.property(
+      return bot.actions.fbName({ context:{ psid:'#' } }).should.eventually.have.property(
         'name', 'abe'
       );
     });
     it('false result', () => {
       nock(/facebook\.com/).get(/.*/).reply(200, { name_first: 'abe' });
-      return FB.name({ psid:'#' }).should.eventually.have.property(
+      return bot.actions.fbName({ context:{ psid:'#' } }).should.eventually.have.property(
         'noName'
       );
     });
     it('error result', () => {
       nock(/facebook\.com/).get(/.*/).reply(404);
-      return FB.name({ psid:'#' }).should.eventually.have.property(
+      return bot.actions.fbName({ context:{ psid:'#' } }).should.eventually.have.property(
         'noName'
       );
     });
