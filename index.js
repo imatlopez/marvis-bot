@@ -57,7 +57,7 @@ const server = app.listen(app.get('port'));
 
 // index. Let's say something fun
 app.get('/', (req, res) => {
-  res.send('"Only those who will risk going too far can possibly find out how far one can go." - T.S. Eliot');
+  res.send('<iframe src="//giphy.com/embed/O7yrslwKwHtle?html5=true" width="480" height="274" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="http://giphy.com/gifs/smile-jiggle-jello-O7yrslwKwHtle">via GIPHY</a></p>');
 });
 
 // Webhook verify setup using FB_VERIFY_TOKEN
