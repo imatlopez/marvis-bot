@@ -58,7 +58,12 @@ const server = app.listen(app.get('port'));
 // index. Let's say something fun
 app.get('/', (req, res) => {
   res.sendFile('puzzle/index.html', { root : __dirname });
-  // res.send('<iframe src="//giphy.com/embed/O7yrslwKwHtle?html5=true" width="480" height="274" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="http://giphy.com/gifs/smile-jiggle-jello-O7yrslwKwHtle">via GIPHY</a></p>');
+});
+app.get('/css/15-puzzle.min.css', (req, res) => {
+  res.sendFile('puzzle/css/15-puzzle.min.css', { root : __dirname });
+});
+app.get('/js/15-puzzle.min.js', (req, res) => {
+  res.sendFile('puzzle/js/15-puzzle.min.js', { root : __dirname });
 });
 
 // Webhook verify setup using FB_VERIFY_TOKEN
