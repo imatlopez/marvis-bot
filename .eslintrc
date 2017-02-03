@@ -12,10 +12,10 @@
         "browser": true
     },
     "globals": {
-      "describe",
-      "it",
-      "beforeEach",
-      "afterEach"
+      "describe": true,
+      "it": true,
+      "beforeEach": true,
+      "afterEach": true
     },
     "rules": {
       // Possible Errors
