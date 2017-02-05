@@ -66,6 +66,15 @@ app.get('/js/15-puzzle.min.js', (req, res) => {
   res.sendFile('puzzle/js/15-puzzle.min.js', { root : __dirname });
 });
 
+// Me Too Monologues
+app.get('/metoo', (req, res) => {
+  const netID = req.param('id');
+  const spotNum = req.param('spot');
+  const date = req.param('date');
+  const dateStr = `${date.substring(0, 2)}-${date.substring(2, 4)}-${date.substring(4, 8)}`;
+  res.send(`<h1>${netID} has spot number ${spotNum} on ${dateStr}</h1>`);
+});
+
 // Webhook verify setup using FB_VERIFY_TOKEN
 app.get('/webhook/', (req, res) => {
   if (req.query['hub.mode'] === 'subscribe' &&
