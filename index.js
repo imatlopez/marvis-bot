@@ -18,11 +18,7 @@ const FBM = require('./messenger.js');
 const wit = bot.getWit();
 
 // Webserver parameter
-const PORT = process.env.PORT || 8445;
-
-/*
-  Wit.ai bot specific code
-*/
+const PORT = process.env.PORT || 3000;
 
 // This will contain all user sessions. Each session has an entry:
 // sessionId -> {fbid: facebookUserId, context: sessionState}
@@ -53,6 +49,7 @@ const getSession = (psid) => {
 const app = express();
 app.set('port', PORT);
 app.use(bodyParser.json());
+app.use(express.static('public'));
 const server = app.listen(app.get('port'));
 
 // index. Let's say something fun
@@ -67,12 +64,22 @@ app.get('/js/15-puzzle.min.js', (req, res) => {
 });
 
 // Me Too Monologues
+app.set('views', __dirname + '/views');
+app.set('view engine', 'pug');
+app.use('/metoo', bodyParser.json());
 app.get('/metoo', (req, res) => {
-  const netID = req.param('id');
-  const spotNum = req.param('spot');
-  const date = req.param('date');
-  const dateStr = `${date.substring(0, 2)}-${date.substring(2, 4)}-${date.substring(4, 8)}`;
-  res.send(`<h1>${netID} has spot number ${spotNum} on ${dateStr}</h1>`);
+  const copy = `${new Date().getFullYear()}`;
+  let query;
+  try {
+    query = tokens.decrypt(req.query.id).split('@');
+  } catch (e) {
+    query = [];
+  }
+  if (query.length === 3) {
+    res.render('metoo', { name: query[0], spot: query[1], date: query[2], copy:  copy });
+  } else {
+    res.render('metoo404', { copy:  copy });
+  }
 });
 
 // Webhook verify setup using FB_VERIFY_TOKEN

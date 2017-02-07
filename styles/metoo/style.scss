@@ -1,0 +1,55 @@
+// Core variables and mixins
+@import "variables";
+@import "mixins";
+// Reset and dependencies
+// Core CSS
+@import "grid";
+@import "flex";
+// Components
+// Utility classes
+@import "responsive";
+
+header,
+footer,
+.center {
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 3rem;
+  color: $gray;
+}
+
+h2 {
+  margin: 0;
+  font-size: 5rem;
+  color: $gray-dark;
+}
+
+p {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: $gray;
+}
+
+a {
+  color: $gray;
+  text-decoration: none;
+  &:hover {
+    color: #ef5252;
+  }
+}
+
+header {
+  margin: 2rem 0;
+  img {
+    width: 15rem;
+  }
+}
+
+footer {
+  color: $gray;
+  text-transform: uppercase;
+  margin: 1rem 0;
+}
